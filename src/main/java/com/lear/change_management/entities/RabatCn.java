@@ -1,6 +1,8 @@
 package com.lear.change_management.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,6 +21,8 @@ public class RabatCn {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotEmpty
+    @NotNull
     private String name;
 
     @OneToMany(mappedBy = "rabatCn", fetch = FetchType.LAZY)
@@ -26,8 +30,10 @@ public class RabatCn {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @NotNull
     private Project project;
 
+    @NotNull
     private String status;
 
     @Column(name = "creation_date")

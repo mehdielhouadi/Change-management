@@ -45,6 +45,10 @@ public class ProjectService {
         return p;
     }
 
+    public boolean existsByNameIgnoreCase(String name) {
+        return projectRepo.existsByNameIgnoreCase(name);
+    }
+
     public void deleteProject(Long id) {
         projectRepo.deleteById(id);
     }
@@ -54,9 +58,21 @@ public class ProjectService {
         return projectRepo.findAllWithRcns();
     }
 
+    public List<Project> getProjectWithRcns(Project project) {
+        return projectRepo.findProjectWithRcns(project.getName());
+    }
+
+
     public List<Project> getAllProjectsWithRcnsForYear(int year, String filterText) {
         if (null == filterText || filterText.isEmpty()) {
-            return projectRepo.findAllWithRcns();
+            List<Project> projects = projectRepo.findAllWithRcns();
+            for (Project p : projects) {
+                p.setRabatCns(
+                        p.getRabatCns().stream()
+                                .filter(r -> r.getCreationDate().getYear() == year)
+                                .collect(Collectors.toSet()));
+            }
+            return projects;
         }
 
         List<Project> projects = projectRepo.searchAllWithRcns(filterText);

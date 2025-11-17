@@ -7,14 +7,14 @@ import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.views.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -26,6 +26,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 
@@ -70,6 +71,7 @@ public class ProjectsView extends VerticalLayout {
         grid.setEmptyStateText("No projects found.");
         grid.addColumn(createToggleDetailsRenderer(grid)).setWidth("80px")
                 .setFlexGrow(0).setFrozen(true);
+
         grid.addColumn("name");
         grid.addComponentColumn(project -> {
             HorizontalLayout actions = new HorizontalLayout();
@@ -79,8 +81,23 @@ public class ProjectsView extends VerticalLayout {
 
             Button delete = new Button("Delete", VaadinIcon.TRASH.create());
             delete.addClickListener(e -> {
-                projectService.deleteProject(project.getId());
-                refreshGrid("");
+                ConfirmDialog dialog = new ConfirmDialog();
+                dialog.setHeader("Delete project");
+                dialog.setText("Are you sure you want to permanently delete project \"" + project.getName() + "\" and all its RCNs?");
+                dialog.setCancelable(true);
+                dialog.setConfirmText("Delete");
+
+                dialog.addConfirmListener(event -> {
+                    // Delete all RCNs related to the project
+                    projectService.getProjectWithRcns(project)
+                            .forEach(p -> p.getRabatCns().forEach(rabatCnService::deleteRcn));
+
+                    projectService.deleteProject(project.getId());
+
+                    refreshGrid("");
+                    Notification.show("Project and related RCns deleted.", 2000, Notification.Position.MIDDLE);
+                });
+                dialog.open();
             });
 
             actions.add(edit, delete);
@@ -92,22 +109,6 @@ public class ProjectsView extends VerticalLayout {
         return grid;
     }
 
-//    private Component createRcnSubGrid(Project project) {
-//        VerticalLayout layout = new VerticalLayout();
-//        layout.setPadding(false);
-//        layout.setSpacing(false);
-//
-//        Grid<RabatCn> subGrid = new Grid<>(RabatCn.class, false);
-//        subGrid.setEmptyStateText("No RCN found for this project this year.");
-//
-//        subGrid.setItems(project.getRabatCns());
-//
-//        subGrid.addColumn(RabatCn::getName).setHeader("Name");
-//        subGrid.addColumn(RabatCn::getStatus).setHeader("Status");
-//
-//        layout.add(subGrid);
-//        return layout;
-//    }
 
     private static Renderer<Project> createToggleDetailsRenderer(Grid<Project> grid) {
 
@@ -236,27 +237,58 @@ public class ProjectsView extends VerticalLayout {
         Dialog dialog = new Dialog();
         dialog.setWidth("400px");
 
+        // Clear and populate the field if editing
         nameField.clear();
+        nameField.getElement().getThemeList().remove("error");
         if (project != null) {
             nameField.setValue(project.getName());
         }
 
+        // Save button
         Button save = new Button("Save", e -> {
-            if (selectedProject == null) {
-                // add
-                Project p = new Project();
-                p.setName(nameField.getValue());
-                projectService.addProject(p);
+            String projectName = nameField.getValue().trim();
+
+            // 1️⃣ Check empty
+            if (projectName.isEmpty()) {
+                nameField.getElement().getThemeList().add("error");
+                Notification.show("Project name cannot be empty.", 3000, Notification.Position.MIDDLE);
+                return;
             } else {
-                // update
-                selectedProject.setName(nameField.getValue());
-                projectService.addProject(selectedProject); // save
+                nameField.getElement().getThemeList().remove("error");
             }
 
-            dialog.close();
-            refreshGrid("");
+            // 2️⃣ Check duplicates (case-insensitive)
+            boolean exists = projectService.existsByNameIgnoreCase(projectName);
+            if (exists && (selectedProject == null || !selectedProject.getName().equalsIgnoreCase(projectName))) {
+                nameField.getElement().getThemeList().add("error");
+                Notification.show("Project with this name already exists.", 3000, Notification.Position.MIDDLE);
+                return;
+            } else {
+                nameField.getElement().getThemeList().remove("error");
+            }
+
+            // 3️⃣ Try saving to DB
+            try {
+                if (selectedProject == null) {
+                    Project p = new Project();
+                    p.setName(projectName);
+                    projectService.addProject(p);
+                } else {
+                    selectedProject.setName(projectName);
+                    projectService.addProject(selectedProject);
+                }
+
+                dialog.close();
+                refreshGrid("");
+            } catch (DataIntegrityViolationException ex) {
+                nameField.getElement().getThemeList().add("error");
+                Notification.show("Project with this name already exists.", 3000, Notification.Position.MIDDLE);
+            } catch (Exception ex) {
+                Notification.show("Error saving project: " + ex.getMessage(), 3000, Notification.Position.MIDDLE);
+            }
         });
 
+        // Cancel button
         Button cancel = new Button("Cancel", e -> dialog.close());
 
         dialog.add(
@@ -268,6 +300,7 @@ public class ProjectsView extends VerticalLayout {
 
         dialog.open();
     }
+
 
     private void refreshGrid(String filterText) {
         int currentYear = LocalDate.now().getYear();

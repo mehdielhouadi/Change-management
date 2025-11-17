@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.avatar.AvatarVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -23,9 +24,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 public class MainLayout extends AppLayout {
 
     public MainLayout() {
-
+        Scroller scroller = new Scroller();
+        scroller.setClassName("vaadin-scroller");
+        scroller.setContent(createSideNav());
         setPrimarySection(Section.DRAWER);
-        addToDrawer(createHeader(), new Scroller(createSideNav()), createUserMenu());
+        addToDrawer(createHeader(), scroller, createUserMenu());
 
     }
 
@@ -38,6 +41,7 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.LARGE);
 
         var header = new Div(appLogo, appName);
+        header.addClassName("nav-header");
         header.addClassNames(LumoUtility.Display.FLEX, LumoUtility.Padding.MEDIUM, LumoUtility.Gap.MEDIUM, LumoUtility.AlignItems.CENTER);
         return header;
     }
@@ -62,7 +66,6 @@ public class MainLayout extends AppLayout {
     }
 
     private Component createUserMenu() {
-        // TODO Replace with real user information and actions
         var avatar = new Avatar("John Smith");
         avatar.addThemeVariants(AvatarVariant.LUMO_XSMALL);
         avatar.addClassNames(LumoUtility.Margin.Right.SMALL);

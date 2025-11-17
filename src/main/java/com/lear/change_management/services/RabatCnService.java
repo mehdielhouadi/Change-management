@@ -20,6 +20,15 @@ public class RabatCnService {
     @Autowired
     private RabatCnRepo rabatCnRepo;
 
+    public void addRcn(RabatCn rabatCn) {
+        rabatCnRepo.save(rabatCn);
+    }
+
+
+    public void deleteRcn(RabatCn rabatCn) {
+        rabatCnRepo.delete(rabatCn);
+    }
+
     public List<RabatCn> getRcnsOfProject(Project project) {
         return rabatCnRepo.findRcnsOfProject(project);
     }
@@ -28,4 +37,18 @@ public class RabatCnService {
         LocalDate end = LocalDate.of(year, 12, 31);
         return rabatCnRepo.findByProjectAndCreationDateBetween(project, start, end);
     }
+
+    public List<RabatCn> getAllRcns() {
+        return rabatCnRepo.findAll();
+    }
+
+    public List<RabatCn> getAllRcns(String filterText) {
+        if (null==filterText || filterText.isEmpty()) {
+            return rabatCnRepo.findAll();
+        }
+        else {
+            return rabatCnRepo.searchAllWithCns(filterText);
+        }
+    }
+
 }
