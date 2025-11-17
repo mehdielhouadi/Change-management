@@ -1,0 +1,18 @@
+.rcn-card {
+    background: white;
+    border-radius: var(--lumo-border-radius-m);
+    padding: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border: 1px solid var(--lumo-contrast-10pct);
+    transition: box-shadow 0.2s ease;
+}
+
+.rcn-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.rcn-title {
+    font-size: var(--lumo-font-size-m);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
