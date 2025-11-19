@@ -1,6 +1,8 @@
 package com.lear.change_management.views;
 
+import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.RabatCn;
+import com.lear.change_management.services.ChangeNoticeService;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.views.ui.NestedLayout;
@@ -14,29 +16,28 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-@Route(value = "Rcns", layout = NestedLayout.class)
-@Menu(title = "Rabat CNs", order = 3, icon = "vaadin:bullets")
+@Route(value = "CNs", layout = NestedLayout.class)
+@Menu(title = "CNs", order = 4, icon = "vaadin:bullets")
 @RolesAllowed("ADMIN")
-public class RabatCnsView extends VerticalLayout {
+public class CnsView extends VerticalLayout {
 
     @Autowired
+    final ChangeNoticeService cnService;
     final RabatCnService rabatCnService;
-    final ProjectService projectService;
 
-    Grid<RabatCn> grid = new Grid<>(RabatCn.class, false);
+    Grid<ChangeNotice> grid = new Grid<>(ChangeNotice.class, false);
     TextField filterText = new TextField();
-    RcnForm form;
+    CnForm form;
 
 
-    public RabatCnsView(RabatCnService rabatCnService, ProjectService projectService) {
+    public CnsView(ChangeNoticeService cnService, RabatCnService rabatCnService) {
+        this.cnService = cnService;
         this.rabatCnService = rabatCnService;
-        this.projectService = projectService;
-        addClassName("Rcns-view");
+        addClassName("cns-view");
         setSizeFull();
         configureGrid();
         configureForm();
@@ -56,14 +57,13 @@ public class RabatCnsView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new RcnForm(projectService.getAllProjects());
+        form = new CnForm(rabatCnService.getAllRcns());
         form.setWidth("25em");
-        form.addSaveListener(this::saveRcn);
-        form.addDeleteListener(this::deleteRcn);
+        form.addSaveListener(this::saveCn);
+        form.addDeleteListener(this::deleteCn);
         form.addCloseListener(e -> closeEditor());
     }
 
-    @NotNull
     private HorizontalLayout getToolBar() {
 
         filterText.setPlaceholder("Filter by name");
@@ -71,60 +71,59 @@ public class RabatCnsView extends VerticalLayout {
         filterText.setValueChangeMode(ValueChangeMode.LAZY);
         filterText.addValueChangeListener(e -> updateList());
 
-        Button addRcnButton = new Button("Add a RCN");
-        addRcnButton.addClickListener(click -> addRcn());
+        Button addRcnButton = new Button("Add a CN");
+        addRcnButton.addClickListener(click -> addCn());
 
         var toolbar = new HorizontalLayout(filterText, addRcnButton );
         toolbar.addClassName("toolbar");
         return toolbar;
     }
 
-    private void addRcn() {
+    private void addCn() {
         grid.asSingleSelect().clear();
-        editRcn(new RabatCn());
+        editCn(new ChangeNotice());
     }
 
-    public void editRcn(RabatCn rabatCn) {
-        if (rabatCn == null) {
+    public void editCn(ChangeNotice changeNotice) {
+        if (changeNotice == null) {
             closeEditor();
         } else {
-            form.setRcn(rabatCn);
+            form.setCn(changeNotice);
             form.setVisible(true);
             addClassName("editing");
         }
     }
 
     private void closeEditor() {
-        form.setRcn(null);
+        form.setCn(null);
         form.setVisible(false);
         removeClassName("editing");
     }
 
     private void configureGrid() {
-        grid.setEmptyStateText("No RCns found.");
-        grid.addClassNames("rcn-grid");
+        grid.setEmptyStateText("No Cns found.");
+        grid.addClassNames("cn-grid");
         grid.setSizeFull();
-        grid.setColumns("name", "status", "creationDate");
-        grid.addColumn(rcn -> rcn.getProject().getName()).setHeader("Project");
+        grid.setColumns("name", "nature", "description", "status");
+        grid.addColumn(changeNotice -> changeNotice.getRabatCn().getName()).setHeader("RCN");
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
 
         grid.asSingleSelect().addValueChangeListener(event ->
-                editRcn(event.getValue()));
+                editCn(event.getValue()));
     }
 
     private void updateList() {
-        grid.setItems(rabatCnService.getAllRcns(filterText.getValue()));
+        grid.setItems(cnService.getAllCns(filterText.getValue()));
     }
 
-    private void saveRcn(RcnForm.SaveEvent event) {
-        RabatCn rabatCn = event.getRabatCn();
-        if (null == rabatCn.getCreationDate()) rabatCn.setCreationDate(LocalDate.now());
-        rabatCnService.addRcn(rabatCn);
+    private void saveCn(CnForm.SaveEvent event) {
+        ChangeNotice changeNotice = event.getChangeNotice();
+        cnService.addCn(changeNotice);
         updateList();
         closeEditor();
     }
-    private void deleteRcn(RcnForm.DeleteEvent event) {
-        rabatCnService.deleteRcn(event.getRabatCn());
+    private void deleteCn(CnForm.DeleteEvent event) {
+        cnService.deleteCn(event.getChangeNotice());
         updateList();
         closeEditor();
     }

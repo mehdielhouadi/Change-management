@@ -4,26 +4,39 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.avatar.AvatarVariant;
-import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Layout;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
+import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-@Layout
+import java.security.Principal;
+
+
+@AnonymousAllowed
 public class MainLayout extends AppLayout {
-
+    @Autowired
+    private AuthenticationContext authContext;
     public MainLayout() {
+
         Scroller scroller = new Scroller();
         scroller.setClassName("vaadin-scroller");
         scroller.setContent(createSideNav());
@@ -66,7 +79,13 @@ public class MainLayout extends AppLayout {
     }
 
     private Component createUserMenu() {
-        var avatar = new Avatar("John Smith");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = "Anonymous";
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            currentUserName = authentication.getName();
+        }
+
+        var avatar = new Avatar(currentUserName);
         avatar.addThemeVariants(AvatarVariant.LUMO_XSMALL);
         avatar.addClassNames(LumoUtility.Margin.Right.SMALL);
         avatar.setColorIndex(5);
@@ -76,12 +95,16 @@ public class MainLayout extends AppLayout {
         userMenu.addClassNames(LumoUtility.Margin.MEDIUM);
 
         var userMenuItem = userMenu.addItem(avatar);
-        userMenuItem.add("John Smith");
+        userMenuItem.add(currentUserName);
         userMenuItem.getSubMenu().addItem("View Profile");
         userMenuItem.getSubMenu().addItem("Manage Settings");
-        userMenuItem.getSubMenu().addItem("Logout");
+        userMenuItem.getSubMenu().addItem("Logout", menuItemClickEvent -> logoutCurrentUser());
 
         return userMenu;
+    }
+
+    private void logoutCurrentUser() {
+        authContext.logout();
     }
 
 }

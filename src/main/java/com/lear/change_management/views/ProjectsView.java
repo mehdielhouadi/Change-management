@@ -25,6 +25,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -32,6 +34,7 @@ import java.time.LocalDate;
 
 @Route(value = "projects", layout = NestedLayout.class)
 @Menu(title = "Projects", order = 2, icon = "vaadin:briefcase")
+@RolesAllowed("ADMIN")
 public class ProjectsView extends VerticalLayout {
 
     @Autowired

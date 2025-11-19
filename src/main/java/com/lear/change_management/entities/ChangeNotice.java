@@ -21,9 +21,11 @@ public class ChangeNotice {
     private String name;
 
     // HW SW HW/SW
-    private String reason;
+    private String nature;
 
     private String description;
+
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "rabat_cn_id")

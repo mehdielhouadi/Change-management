@@ -3,9 +3,11 @@ package com.lear.change_management.views.ui;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @ParentLayout(MainLayout.class)
+@AnonymousAllowed
 public class NestedLayout extends Div implements RouterLayout {
 
     private final Div content;

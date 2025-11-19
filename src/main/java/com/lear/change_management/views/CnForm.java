@@ -1,8 +1,8 @@
 package com.lear.change_management.views;
 
+import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
-import com.sun.jna.platform.win32.WinBase;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -15,32 +15,32 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
 
 import java.util.List;
 
 
-public class RcnForm extends FormLayout {
+public class CnForm extends FormLayout {
 
-
-    TextField name = new TextField("RCN Name");
-    TextField status = new TextField("Status");
-    ComboBox<Project> project = new ComboBox<>("Project");
+    TextField name = new TextField("CN Name");
+    ComboBox<String> nature = new ComboBox<>("Nature");
+    TextField description = new TextField("Description");
+    ComboBox<String> status = new ComboBox<>("Status");
+    ComboBox<RabatCn> rabatCn = new ComboBox<>("RabatCn");
 
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
-    Binder<RabatCn> binder = new BeanValidationBinder<>(RabatCn.class);
+    Binder<ChangeNotice> binder = new BeanValidationBinder<>(ChangeNotice.class);
 
-    public RcnForm(List<Project> projects) {
-        addClassName("rcn-form");
+    public CnForm(List<RabatCn> rabatCns) {
+        addClassName("cn-form");
         binder.bindInstanceFields(this);
-
-        project.setItems(projects);
-        project.setItemLabelGenerator(Project::getName);
-
-        add(name, status, project, createButtonsLayout());
+        nature.setItems("HW", "SW", "HW/SW");
+        status.setItems("IN PROGRESS", "DONE");
+        rabatCn.setItems(rabatCns);
+        rabatCn.setItemLabelGenerator(RabatCn::getName);
+        add(name, nature, description, status, rabatCn, createButtonsLayout());
     }
 
     private Component createButtonsLayout() {
@@ -66,40 +66,39 @@ public class RcnForm extends FormLayout {
     }
 
 
-    public void setRcn(RabatCn rabatCn) {
-        binder.setBean(rabatCn); // <1>
+    public void setCn(ChangeNotice changeNotice) {
+        binder.setBean(changeNotice); // <1>
     }
-
 
     // Events
-    public static abstract class RcnFormEvent extends ComponentEvent<RcnForm> {
-        private RabatCn rabatCn;
+    public static abstract class CnFormEvent extends ComponentEvent<CnForm> {
+        private ChangeNotice changeNotice;
 
-        protected RcnFormEvent(RcnForm source, RabatCn rabatCn) {
+        protected CnFormEvent(CnForm source, ChangeNotice changeNotice) {
             super(source, false);
-            this.rabatCn = rabatCn;
+            this.changeNotice = changeNotice;
         }
 
-        public RabatCn getRabatCn() {
-            return rabatCn;
-        }
-    }
-
-    public static class SaveEvent extends RcnFormEvent {
-        SaveEvent(RcnForm source, RabatCn rabatCn) {
-            super(source, rabatCn);
+        public ChangeNotice getChangeNotice() {
+            return changeNotice;
         }
     }
 
-    public static class DeleteEvent extends RcnFormEvent {
-        DeleteEvent(RcnForm source, RabatCn rabatCn) {
-            super(source, rabatCn);
+    public static class SaveEvent extends CnFormEvent {
+        SaveEvent(CnForm source, ChangeNotice changeNotice) {
+            super(source, changeNotice);
+        }
+    }
+
+    public static class DeleteEvent extends CnFormEvent {
+        DeleteEvent(CnForm source, ChangeNotice changeNotice) {
+            super(source, changeNotice);
         }
 
     }
 
-    public static class CloseEvent extends RcnFormEvent {
-        CloseEvent(RcnForm source) {
+    public static class CloseEvent extends CnFormEvent {
+        CloseEvent(CnForm source) {
             super(source, null);
         }
     }
