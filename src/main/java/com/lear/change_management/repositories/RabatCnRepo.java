@@ -23,4 +23,5 @@ public interface RabatCnRepo extends JpaRepository<RabatCn, Long> {
             """)
     List<RabatCn> searchAllWithCns(@Param("filterText") String filterText);
 
+    List<RabatCn> findAllByProjectName(String projetName);
 }

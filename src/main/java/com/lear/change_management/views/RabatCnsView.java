@@ -24,7 +24,6 @@ import java.time.LocalDate;
 @RolesAllowed("ADMIN")
 public class RabatCnsView extends VerticalLayout {
 
-    @Autowired
     final RabatCnService rabatCnService;
     final ProjectService projectService;
 
@@ -56,7 +55,7 @@ public class RabatCnsView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new RcnForm(projectService.getAllProjects());
+        form = new RcnForm(projectService.getAllProjects(), this.rabatCnService);
         form.setWidth("25em");
         form.addSaveListener(this::saveRcn);
         form.addDeleteListener(this::deleteRcn);
@@ -81,7 +80,9 @@ public class RabatCnsView extends VerticalLayout {
 
     private void addRcn() {
         grid.asSingleSelect().clear();
-        editRcn(new RabatCn());
+        RabatCn rcn = new RabatCn();
+        rcn.setName("RCN - " +  rabatCnService.getCount());
+        editRcn(rcn);
     }
 
     public void editRcn(RabatCn rabatCn) {
@@ -89,6 +90,7 @@ public class RabatCnsView extends VerticalLayout {
             closeEditor();
         } else {
             form.setRcn(rabatCn);
+
             form.setVisible(true);
             addClassName("editing");
         }

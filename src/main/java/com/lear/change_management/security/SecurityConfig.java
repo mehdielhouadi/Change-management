@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -23,15 +24,20 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+
+        var successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        successHandler.setDefaultTargetUrl("/home");
+        successHandler.setAlwaysUseDefaultTargetUrl(true);
+
+        return http.formLogin(configurer -> configurer.successForwardUrl("/home"))
                 .with(VaadinSecurityConfigurer.vaadin(), configurer -> {
-                        configurer.loginView(LoginView.class);
+                    configurer.loginView(LoginView.class);
                 })
-                .logout(
-                logout -> logout.logoutUrl("/logout")
-                )
+
+                .logout(logout -> logout.logoutUrl("/logout"))
                 .build();
     }
+
 
     @Bean
     public UserDetailsService userDetailsService() {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -27,9 +28,11 @@ public class ChangeNotice {
 
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "rabat_cn_id")
-    private RabatCn rabatCn;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "cn_id"),
+            inverseJoinColumns = @JoinColumn(name = "rcn_id"))
+    private Set<RabatCn> rabatCns;
 
 
 }

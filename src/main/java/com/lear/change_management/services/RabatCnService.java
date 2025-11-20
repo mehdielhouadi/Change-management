@@ -25,6 +25,11 @@ public class RabatCnService {
     }
 
 
+    public Long getCount() {
+       return rabatCnRepo.count();
+    }
+
+
     public void deleteRcn(RabatCn rabatCn) {
         rabatCnRepo.delete(rabatCn);
     }
@@ -40,6 +45,9 @@ public class RabatCnService {
 
     public List<RabatCn> getAllRcns() {
         return rabatCnRepo.findAll();
+    }
+    public List<RabatCn> getAllRcnsOfProject(Project project) {
+        return rabatCnRepo.findAllByProjectName(project.getName());
     }
 
     public List<RabatCn> getAllRcns(String filterText) {

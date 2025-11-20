@@ -2,11 +2,8 @@ package com.lear.change_management.views;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
-import com.sun.jna.platform.win32.WinBase;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.Key;
+import com.lear.change_management.services.RabatCnService;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -15,8 +12,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.shared.Registration;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -33,7 +30,14 @@ public class RcnForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<RabatCn> binder = new BeanValidationBinder<>(RabatCn.class);
 
-    public RcnForm(List<Project> projects) {
+    @Autowired
+    private RabatCnService rcnService;
+
+    public RcnForm(List<Project> projects, RabatCnService rcnService) {
+        this.rcnService = rcnService;
+        name.setReadOnly(true);
+
+
         addClassName("rcn-form");
         binder.bindInstanceFields(this);
 
@@ -67,7 +71,7 @@ public class RcnForm extends FormLayout {
 
 
     public void setRcn(RabatCn rabatCn) {
-        binder.setBean(rabatCn); // <1>
+        binder.setBean(rabatCn);
     }
 
 
@@ -86,6 +90,7 @@ public class RcnForm extends FormLayout {
     }
 
     public static class SaveEvent extends RcnFormEvent {
+
         SaveEvent(RcnForm source, RabatCn rabatCn) {
             super(source, rabatCn);
         }

@@ -11,6 +11,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.RolesAllowed;
 
 @Route(value = "/home", layout = NestedLayout.class)
+@RouteAlias("/")
 @Menu(title = "Home", order = 1, icon = "vaadin:dashboard")
 @RolesAllowed({"ADMIN", "PROD"})
 public class DashboardView extends Main {
