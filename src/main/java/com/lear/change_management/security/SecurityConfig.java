@@ -43,19 +43,6 @@ public class SecurityConfig {
                 .build();
     }
 
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        var uds = new InMemoryUserDetailsManager();
-        var u1 = User.withUsername("ADMIN")
-                .password("ADMIN").roles("ADMIN").build();
-        uds.createUser(u1);
-        var u2 = User.withUsername("PROD")
-                .password("PROD").roles("PROD").build();
-        uds.createUser(u2);
-        return uds;
-    }
-
     @Bean
     public PasswordEncoder encoder() {
         return  NoOpPasswordEncoder.getInstance();

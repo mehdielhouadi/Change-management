@@ -30,7 +30,7 @@ import java.util.Set;
 
 @Route(value = "CNs", layout = NestedLayout.class)
 @Menu(title = "CNs", order = 4, icon = "vaadin:bullets")
-@RolesAllowed("ADMIN")
+@RolesAllowed({"ADMIN", "ENGINEERING"})
 public class CnsView extends VerticalLayout {
 
     final ChangeNoticeService cnService;
