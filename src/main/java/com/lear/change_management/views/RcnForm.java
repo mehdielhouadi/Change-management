@@ -20,6 +20,7 @@ import java.util.List;
 
 public class RcnForm extends FormLayout {
 
+    private final RabatCnService rcnService;
 
     TextField name = new TextField("RCN Name");
     TextField status = new TextField("Status");
@@ -30,8 +31,6 @@ public class RcnForm extends FormLayout {
     Button close = new Button("Cancel");
     Binder<RabatCn> binder = new BeanValidationBinder<>(RabatCn.class);
 
-    @Autowired
-    private RabatCnService rcnService;
 
     public RcnForm(List<Project> projects, RabatCnService rcnService) {
         this.rcnService = rcnService;

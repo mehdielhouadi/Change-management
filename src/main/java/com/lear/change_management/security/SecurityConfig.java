@@ -28,11 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        var successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-        successHandler.setDefaultTargetUrl("/home");
-        successHandler.setAlwaysUseDefaultTargetUrl(true);
-
-        return http.formLogin(configurer -> configurer.successForwardUrl("/home"))
+        return http
                 .with(VaadinSecurityConfigurer.vaadin(), configurer -> {
                     configurer.loginView(LoginView.class);
                 })

@@ -1,6 +1,7 @@
 package com.lear.change_management.views;
 
 import com.lear.change_management.entities.User;
+import com.lear.change_management.services.UserService;
 import com.lear.change_management.views.ui.NestedLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -12,22 +13,27 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.RolesAllowed;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "users", layout = NestedLayout.class)
 @Menu(title = "users", order = 4, icon = "vaadin:user")
 @RolesAllowed("ADMIN")
 public class UsersView extends Main {
 
+    private final UserService userService;
+
     Grid<User> grid = new Grid<>(User.class, false);
 
 
-    public UsersView(){
+    public UsersView(UserService userService){
+        this.userService = userService;
         grid.addColumn(createUserRenderer()).setHeader("Employee")
-                .setAutoWidth(true).setFlexGrow(0)
                 .setComparator(User::getUserName);
         grid.addColumn(User::getUserName).setHeader("Role")
-                .setAutoWidth(true).setFlexGrow(0)
                 .setComparator(User::getUserName);
+        grid.setItems(userService.getAll());
+        add(grid);
     }
 
     private Renderer<User> createUserRenderer() {

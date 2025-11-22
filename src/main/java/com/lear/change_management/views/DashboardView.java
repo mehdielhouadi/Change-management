@@ -13,7 +13,7 @@ import jakarta.annotation.security.RolesAllowed;
 @Route(value = "/home", layout = NestedLayout.class)
 @RouteAlias("/")
 @Menu(title = "Home", order = 1, icon = "vaadin:dashboard")
-@RolesAllowed({"ADMIN", "PROD"})
+@RolesAllowed({"ADMIN", "ENGINEERING"})
 public class DashboardView extends Main {
     public DashboardView() {
         add(new H1("Dashboard"));
