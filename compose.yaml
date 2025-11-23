@@ -1,0 +1,24 @@
+services:
+  changemanagementdb:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=change_management
+      - POSTGRES_USER=postgres
+    volumes:
+      - pg-data:/var/lib/postgresql
+    depends_on:
+      - changemanagementapp
+  changemanagementapp:
+    image: spring-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://changemanagementdb:5432/change_management
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+volumes:
+  pg-data:
