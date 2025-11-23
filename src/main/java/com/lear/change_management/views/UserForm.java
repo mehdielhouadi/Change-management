@@ -1,6 +1,5 @@
 package com.lear.change_management.views;
 
-import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.entities.Role;
 import com.lear.change_management.entities.User;
 import com.lear.change_management.services.RoleService;
@@ -18,14 +17,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserForm extends FormLayout {
 
     private final UserService userService;
     private final RoleService roleService;
 
-    TextField name = new TextField("Name");
+    TextField userName = new TextField("Name");
     TextField email = new TextField("email");
     ComboBox<Role> role = new ComboBox<>("role");
     Button save = new Button("Save");
@@ -38,11 +36,9 @@ public class UserForm extends FormLayout {
         this.roleService = roleService;
         addClassName("user-form");
         binder.bindInstanceFields(this);
-
         role.setItems(roleService.getAll());
-        role.setItemLabelGenerator(Role::getName);
-
-        add(name, email, role, createButtonsLayout());
+        role.setItemLabelGenerator(r -> r.getName().toLowerCase().replace("role_", ""));
+        add(userName, email, role, createButtonsLayout());
     }
 
     private Component createButtonsLayout() {
@@ -57,7 +53,7 @@ public class UserForm extends FormLayout {
         delete.addClickListener(event -> fireEvent(new UserForm.DeleteEvent(this, binder.getBean())));
         close.addClickListener(event -> fireEvent(new UserForm.CloseEvent(this)));
 
-        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
+        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
         return new HorizontalLayout(save, delete, close);
     }
 

@@ -18,5 +18,21 @@ public class UserService {
         return userRepo.findAll();
     }
 
+    public List<User> getAll(String filterText) {
+        if (filterText==null || filterText.isEmpty()) {
+            return userRepo.findAll();
+        }
+        return userRepo.findAll()
+                .stream()
+                .filter(user -> user.getUserName().contains(filterText))
+                .toList();
+    }
 
+    public void addUser(User user) {
+        userRepo.save(user);
+    }
+
+    public void deleteUser(User user) {
+        userRepo.delete(user);
+    }
 }

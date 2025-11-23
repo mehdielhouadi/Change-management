@@ -13,7 +13,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -25,7 +24,6 @@ public class RcnForm extends FormLayout {
     TextField name = new TextField("RCN Name");
     TextField status = new TextField("Status");
     ComboBox<Project> project = new ComboBox<>("Project");
-
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
@@ -35,14 +33,10 @@ public class RcnForm extends FormLayout {
     public RcnForm(List<Project> projects, RabatCnService rcnService) {
         this.rcnService = rcnService;
         name.setReadOnly(true);
-
-
         addClassName("rcn-form");
         binder.bindInstanceFields(this);
-
         project.setItems(projects);
         project.setItemLabelGenerator(Project::getName);
-
         add(name, status, project, createButtonsLayout());
     }
 
@@ -54,11 +48,11 @@ public class RcnForm extends FormLayout {
         save.addClickShortcut(Key.ENTER);
         close.addClickShortcut(Key.ESCAPE);
 
-        save.addClickListener(event -> validateAndSave()); // <1>
-        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean()))); // <2>
-        close.addClickListener(event -> fireEvent(new CloseEvent(this))); // <3>
+        save.addClickListener(event -> validateAndSave());
+        delete.addClickListener(event -> fireEvent(new DeleteEvent(this, binder.getBean())));
+        close.addClickListener(event -> fireEvent(new CloseEvent(this)));
 
-        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid())); // <4>
+        binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
         return new HorizontalLayout(save, delete, close);
     }
 

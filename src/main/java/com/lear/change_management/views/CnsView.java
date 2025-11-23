@@ -139,7 +139,7 @@ public class CnsView extends VerticalLayout {
         container.add(title);
 
         if (changeNotice.getRabatCns().isEmpty()) {
-            Span empty = new Span("No RCNs for this project.");
+            Span empty = new Span("No linked RCNs to this CN.");
             empty.getStyle().set("color", "var(--lumo-secondary-text-color)");
             container.add(empty);
             return container;
@@ -150,8 +150,6 @@ public class CnsView extends VerticalLayout {
         row.setWidthFull();
         row.setSpacing(true);
         row.setWrap(true);
-
-        int cardCount = 0;
 
         for (RabatCn rcn : changeNotice.getRabatCns()) {
             // Card container
@@ -201,7 +199,6 @@ public class CnsView extends VerticalLayout {
             card.add(header, details);
 
             row.add(card);
-            cardCount++;
         }
 
         container.add(row);
