@@ -1,16 +1,25 @@
+version: "3.9"
 services:
+  server:
+    build:
+      context: .
+      target: development
   changemanagementdb:
     image: postgres:latest
     ports:
       - "5432:5432"
+    restart: always
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=change_management
       - POSTGRES_USER=postgres
     volumes:
       - pg-data:/var/lib/postgresql
-    depends_on:
-      - changemanagementapp
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   changemanagementapp:
     image: spring-app
     ports:
@@ -20,5 +29,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      changemanagementdb:
+        condition: service_healthy
 volumes:
   pg-data:

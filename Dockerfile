@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 RUN ./mvnw clean install -Pproduction -DskipTests
 
-FROM openjdk:21-ea-oracle
+FROM openjdk:21-ea-oracle as development
 WORKDIR /app
 RUN groupadd spring && useradd -m -g spring spring
 USER spring:spring
