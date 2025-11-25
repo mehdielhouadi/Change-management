@@ -32,6 +32,9 @@ public class RabatCn {
     @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.EAGER)
     private Set<ChangeNotice> changeNotices = new HashSet<>();
 
+    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.EAGER)
+    private Set<Variant> affectedVariants = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "project_id")
     @NotNull

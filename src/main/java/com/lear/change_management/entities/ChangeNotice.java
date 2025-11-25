@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,11 +29,17 @@ public class ChangeNotice {
 
     private String status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "cn_id"),
             inverseJoinColumns = @JoinColumn(name = "rcn_id"))
-    private Set<RabatCn> rabatCns;
+    private Set<RabatCn> rabatCns = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "variant_id"),
+            inverseJoinColumns = @JoinColumn(name = "cn_id"))
+    private Set<Variant> affectedVariants = new HashSet<>();
 
 
 }
