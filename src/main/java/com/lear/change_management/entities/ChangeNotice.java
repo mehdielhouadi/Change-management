@@ -31,15 +31,15 @@ public class ChangeNotice {
 
     @ManyToMany
     @JoinTable(
-            joinColumns = @JoinColumn(name = "cn_id"),
-            inverseJoinColumns = @JoinColumn(name = "rcn_id"))
+            joinColumns = @JoinColumn(name = "rcn_id"),
+            inverseJoinColumns = @JoinColumn(name = "cn_id"))
     private Set<RabatCn> rabatCns = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
-            joinColumns = @JoinColumn(name = "variant_id"),
+            joinColumns = @JoinColumn(name = "setupVariants_id"),
             inverseJoinColumns = @JoinColumn(name = "cn_id"))
-    private Set<Variant> affectedVariants = new HashSet<>();
+    private Set<SetupVariant> setupVariants = new HashSet<>();
 
 
 }

@@ -22,23 +22,8 @@ public class SetupSteps {
     @Column(unique = true)
     private String name;
 
-    private boolean isAffected;
-
     @ManyToOne
-    @JoinColumn(name = "responsible_id")
-    private User responsible;
-
-    private LocalDate startDate;
-
-    private LocalDate dueDate;
-
-    private String status;
-
-    private String commentSignature;
-
-    @ManyToOne
-    @JoinColumn(name = "setupstep_id")
-    @NotNull
+    @JoinColumn(name = "project_id")
     private Project project;
 
 

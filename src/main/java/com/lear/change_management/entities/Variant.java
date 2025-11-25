@@ -22,14 +22,19 @@ public class Variant {
 
     private String name;
 
-    private String PartNumber;
+    private String partNumber;
 
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-    @ManyToMany(mappedBy = "affectedVariants", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
+    private Set<SetupVariant> setupVariants = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "variant_id"),
+            inverseJoinColumns = @JoinColumn(name = "rcn_id"))
     private Set<RabatCn> rabatCns = new HashSet<>();
-
-    @ManyToMany(mappedBy = "affectedVariants", fetch = FetchType.EAGER)
-    private Set<ChangeNotice> changeNotices = new HashSet<>();
 
 }

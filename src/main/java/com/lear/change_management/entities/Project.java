@@ -30,4 +30,7 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<RabatCn> rabatCns = new HashSet<>();
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<Variant> variants = new HashSet<>();
+
 }

@@ -29,10 +29,10 @@ public class RabatCn {
     @NotNull
     private String name;
 
-    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.LAZY)
     private Set<ChangeNotice> changeNotices = new HashSet<>();
 
-    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.LAZY)
     private Set<Variant> affectedVariants = new HashSet<>();
 
     @ManyToOne
