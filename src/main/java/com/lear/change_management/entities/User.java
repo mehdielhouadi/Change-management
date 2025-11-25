@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity(name = "users")
 @Getter
 @Setter
@@ -33,6 +36,8 @@ public class User {
     @NotEmpty
     private String email;
 
+    @OneToMany(mappedBy = "responsible", fetch = FetchType.LAZY)
+    private Set<SetupSteps> affectedSetupSteps = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "role_id")

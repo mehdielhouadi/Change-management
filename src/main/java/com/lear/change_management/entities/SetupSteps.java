@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -20,8 +22,24 @@ public class SetupSteps {
     @Column(unique = true)
     private String name;
 
+    private boolean isAffected;
+
     @ManyToOne
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "responsible_id")
+    private User responsible;
+
+    private LocalDate startDate;
+
+    private LocalDate dueDate;
+
+    private String status;
+
+    private String commentSignature;
+
+    @ManyToOne
+    @JoinColumn(name = "setupstep_id")
     @NotNull
     private Project project;
+
+
 }
