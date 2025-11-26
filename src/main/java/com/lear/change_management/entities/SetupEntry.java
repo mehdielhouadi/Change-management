@@ -19,6 +19,7 @@ public class SetupEntry {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    // for info
     @ManyToOne
     @JoinColumn(name = "setupStep_id")
     private SetupStep setupStep;

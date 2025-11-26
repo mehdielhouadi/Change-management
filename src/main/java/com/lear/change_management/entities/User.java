@@ -36,11 +36,15 @@ public class User {
     @NotEmpty
     private String email;
 
-    @OneToMany(mappedBy = "responsible", fetch = FetchType.LAZY)
-    private Set<SetupPlan> affectedSetups = new HashSet<>();
-
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "setupStep_id")
+    )
+    private Set<SetupStep> SetupStepsAssigned = new HashSet<>();
 
 }

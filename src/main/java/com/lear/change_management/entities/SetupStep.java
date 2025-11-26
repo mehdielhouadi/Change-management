@@ -26,8 +26,8 @@ public class SetupStep {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToMany(mappedBy = "setupVariants", fetch = FetchType.LAZY)
-    private User owner;
+    @ManyToMany(mappedBy = "SetupStepsAssigned", fetch = FetchType.LAZY)
+    private Set<User> owners;
 
     @OneToMany(mappedBy = "setupStep", fetch = FetchType.LAZY)
     private Set<SetupEntry> setupEntries= new HashSet<>();
