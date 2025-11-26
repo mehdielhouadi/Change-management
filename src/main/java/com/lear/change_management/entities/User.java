@@ -37,7 +37,7 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "responsible", fetch = FetchType.LAZY)
-    private Set<SetupVariant> affectedSetups = new HashSet<>();
+    private Set<SetupPlan> affectedSetups = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "role_id")

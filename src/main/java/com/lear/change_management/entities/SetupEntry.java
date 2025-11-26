@@ -7,22 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetupVariant {
+public class SetupEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "variant_id")
-    private Variant variant;
+    @JoinColumn(name = "setupStep_id")
+    private SetupStep setupStep;
 
     private String status;
 
@@ -38,8 +37,8 @@ public class SetupVariant {
 
     private String commentSignature;
 
-    @ManyToMany(mappedBy = "setupVariants", fetch = FetchType.LAZY)
-    private Set<ChangeNotice> changeNotices = new HashSet<>();
-
+    @ManyToOne
+    @JoinColumn(name = "setupPlan_id")
+    private SetupPlan setupPlan;
 
 }

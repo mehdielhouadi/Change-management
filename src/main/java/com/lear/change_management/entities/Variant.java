@@ -29,7 +29,7 @@ public class Variant {
     private Project project;
 
     @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
-    private Set<SetupVariant> setupVariants = new HashSet<>();
+    private Set<SetupPlan> setupPlans = new HashSet<>();
 
     @ManyToMany
     @JoinTable(

@@ -1,20 +1,20 @@
 package com.lear.change_management.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SetupSteps {
+public class SetupStep {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -26,5 +26,9 @@ public class SetupSteps {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @ManyToMany(mappedBy = "setupVariants", fetch = FetchType.LAZY)
+    private User owner;
 
+    @OneToMany(mappedBy = "setupStep", fetch = FetchType.LAZY)
+    private Set<SetupEntry> setupEntries= new HashSet<>();
 }

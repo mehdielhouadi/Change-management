@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,7 +38,7 @@ public class ChangeNotice {
     @JoinTable(
             joinColumns = @JoinColumn(name = "setupVariants_id"),
             inverseJoinColumns = @JoinColumn(name = "cn_id"))
-    private Set<SetupVariant> setupVariants = new HashSet<>();
+    private Set<SetupPlan> setupPlans = new HashSet<>();
 
 
 }

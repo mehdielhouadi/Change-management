@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,7 +24,7 @@ public class Project {
     private String name;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private Set<SetupSteps> setupSteps = new HashSet<>();
+    private Set<SetupStep> setupSteps = new HashSet<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<RabatCn> rabatCns = new HashSet<>();
