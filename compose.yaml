@@ -18,6 +18,7 @@ services:
   changemanagementapp:
     build:
       context: .
+      dockerfile: Dockerfile
       target: development
     ports:
       - "8080:8080"
