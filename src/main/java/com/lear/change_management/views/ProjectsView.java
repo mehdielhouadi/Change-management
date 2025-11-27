@@ -22,9 +22,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.Menu;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +76,11 @@ public class ProjectsView extends VerticalLayout {
         grid.addColumn("name");
         grid.addComponentColumn(project -> {
             HorizontalLayout actions = new HorizontalLayout();
+
+            Button editProcessSteps = new Button(" Process Steps", VaadinIcon.ANCHOR.create());
+            editProcessSteps.addClickListener(e -> editProcessSteps.getUI().ifPresent(
+                    ui -> ui.navigate(ProcessStepsView.class, QueryParameters.of("id", project.getId().toString())))
+            );
 
             Button edit = new Button("Edit", VaadinIcon.EDIT.create());
             edit.addClickListener(e -> openProjectDialog(project));
