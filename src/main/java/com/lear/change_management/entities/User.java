@@ -40,11 +40,7 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @ManyToMany
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "setupStep_id")
-    )
+    @ManyToMany(mappedBy = "owners", fetch = FetchType.EAGER)
     private Set<SetupStep> SetupStepsAssigned = new HashSet<>();
 
 }

@@ -24,7 +24,7 @@ public class AdminAdder implements CommandLineRunner {
             role.setName("ROLE_ADMIN");
             role = roleRepo.save(role);
         }  else {
-            role = roleRepo.findByName("ROLE_ADMIN"); // <-- fetch existing
+            role = roleRepo.findByName("ROLE_ADMIN");
         }
 
         if (userRepo.count() == 0) {
@@ -34,6 +34,11 @@ public class AdminAdder implements CommandLineRunner {
             admin.setPassword("admin");
             admin.setRole(role);
             userRepo.save(admin);
+        }
+        Role role1 = new Role();
+        if (roleRepo.count() == 1){
+            role1.setName("ROLE_ENGINEER");
+            role1 = roleRepo.save(role1);
         }
 
     }

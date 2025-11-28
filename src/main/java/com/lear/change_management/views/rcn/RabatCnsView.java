@@ -1,4 +1,4 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.rcn;
 
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.services.ProjectService;
@@ -15,7 +15,6 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 

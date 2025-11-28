@@ -1,4 +1,4 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.cn;
 
 import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
@@ -15,7 +15,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;

@@ -1,4 +1,4 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.users;
 
 import com.lear.change_management.entities.Role;
 import com.lear.change_management.entities.User;

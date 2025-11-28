@@ -1,6 +1,5 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.variant;
 
-import com.lear.change_management.entities.User;
 import com.lear.change_management.entities.Variant;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RoleService;

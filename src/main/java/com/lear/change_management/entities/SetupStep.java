@@ -22,13 +22,17 @@ public class SetupStep {
     @Column(unique = true)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToMany(mappedBy = "SetupStepsAssigned", fetch = FetchType.LAZY)
-    private Set<User> owners;
+    @ManyToMany
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "setupStep_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> owners = new HashSet<>();
 
     @OneToMany(mappedBy = "setupStep", fetch = FetchType.LAZY)
-    private Set<SetupEntry> setupEntries= new HashSet<>();
+    private Set<SetupEntry> setupEntries = new HashSet<>();
 }

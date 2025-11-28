@@ -1,4 +1,4 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.project;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
@@ -23,7 +23,6 @@ import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.*;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -79,7 +78,7 @@ public class ProjectsView extends VerticalLayout {
 
             Button editProcessSteps = new Button(" Process Steps", VaadinIcon.ANCHOR.create());
             editProcessSteps.addClickListener(e -> editProcessSteps.getUI().ifPresent(
-                    ui -> ui.navigate(ProcessStepsView.class, QueryParameters.of("id", project.getId().toString())))
+                    ui -> ui.navigate(SetupStepsView.class, QueryParameters.of("id", project.getId().toString())))
             );
 
             Button edit = new Button("Edit", VaadinIcon.EDIT.create());
@@ -106,7 +105,7 @@ public class ProjectsView extends VerticalLayout {
                 dialog.open();
             });
 
-            actions.add(edit, delete);
+            actions.add(editProcessSteps, edit, delete);
             return actions;
         }).setHeader("Actions");
         grid.setDetailsVisibleOnClick(false);

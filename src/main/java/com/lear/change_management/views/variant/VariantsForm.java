@@ -1,4 +1,4 @@
-package com.lear.change_management.views;
+package com.lear.change_management.views.variant;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.Variant;
