@@ -1,6 +1,7 @@
 package com.lear.change_management.views.users;
 
 
+import com.lear.change_management.entities.Role;
 import com.lear.change_management.entities.User;
 import com.lear.change_management.services.PasswordResetService;
 import com.lear.change_management.services.RoleService;
@@ -58,7 +59,21 @@ public class UsersView extends VerticalLayout {
         form.setWidth("25em");
         form.addSaveListener(this::saveUser);
         form.addDeleteListener(this::deleteUser);
+        form.addResetPasswordListener(this::resetUserPassword);
         form.addCloseListener(e -> closeEditor());
+    }
+
+    private void resetUserPassword(UserForm.ResetPasswordEvent event) {
+        User user = event.getUser();
+        String email = user.getEmail();
+        user = userService.getUserByEmail(email);
+        String randomPassword = RandomStringUtils.randomAlphanumeric(32);
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        passwordResetService.createAndSendResetToken(user);
+        userService.addUser(user);
+        updateList();
+        closeEditor();
+
     }
 
     private void deleteUser(UserForm.DeleteEvent event) {
@@ -69,13 +84,24 @@ public class UsersView extends VerticalLayout {
 
     @Transactional
     private void saveUser(UserForm.SaveEvent event) {
-        User user = event.getUser();
-
-        String randomPassword = RandomStringUtils.randomAlphanumeric(32);
-        user.setPassword(passwordEncoder.encode(randomPassword));
-        passwordResetService.createAndSendResetToken(user);
-
-        userService.addUser(user);
+        User eventUser = event.getUser();
+        String email = eventUser.getEmail();
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            user = new User(eventUser);
+            String randomPassword = RandomStringUtils.randomAlphanumeric(32);
+            user.setPassword(passwordEncoder.encode(randomPassword));
+            passwordResetService.createAndSendResetToken(user);
+            userService.addUser(user);
+            updateList();
+            closeEditor();
+            return;
+        }
+        eventUser.setPassword(user.getPassword());
+        eventUser.setPasswordResetToken(user.getPasswordResetToken());
+        eventUser.setPasswordResetExpiry(user.getPasswordResetExpiry());
+        eventUser.setMustChangePassword(user.isMustChangePassword());
+        userService.addUser(eventUser);
         updateList();
         closeEditor();
     }
@@ -106,6 +132,7 @@ public class UsersView extends VerticalLayout {
 
     private void addUser() {
         grid.asSingleSelect().clear();
+        form.setResetPasswordButtonEnabled(false);
         editUser(new User());
     }
     public void editUser(User user) {
@@ -146,8 +173,12 @@ public class UsersView extends VerticalLayout {
                 .setAutoWidth(true)
                 .setSortable(true);
 
-        grid.asSingleSelect().addValueChangeListener(event ->
-                editUser(event.getValue()));
+        grid.asSingleSelect().addValueChangeListener(
+                event -> {
+                    form.setResetPasswordButtonEnabled(true);
+                    editUser(event.getValue());
+        });
+
         grid.getColumns().forEach(col -> col.setAutoWidth(true));
         grid.setItems(userService.getAll());
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);

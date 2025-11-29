@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "users")
@@ -37,6 +38,7 @@ public class User {
     @Email
     @NotNull
     @NotEmpty
+    @Column(unique = true)
     private String email;
 
     @ManyToOne
@@ -53,4 +55,11 @@ public class User {
     private String passwordResetToken;
 
     private LocalDateTime passwordResetExpiry;
+
+    public User(User eventUser) {
+        this.userName = eventUser.getUserName();
+        this.email = eventUser.getEmail();
+        this.password = eventUser.getPassword();
+        this.role = eventUser.getRole();
+    }
 }

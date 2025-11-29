@@ -29,11 +29,13 @@ public class UserForm extends FormLayout {
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
+    Button resetPassword = new Button("Reset Password");
     Binder<User> binder = new BeanValidationBinder<>(User.class);
 
     public UserForm(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
+        resetPassword.setId("resetpwdbutton");
         addClassName("user-form");
         binder.bindInstanceFields(this);
         role.setItems(roleService.getAll());
@@ -41,6 +43,9 @@ public class UserForm extends FormLayout {
         add(userName, email, role, createButtonsLayout());
     }
 
+    public void setResetPasswordButtonEnabled(boolean enabled) {
+        resetPassword.setEnabled(enabled);
+    }
     private Component createButtonsLayout() {
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -52,9 +57,10 @@ public class UserForm extends FormLayout {
         save.addClickListener(event -> validateAndSave());
         delete.addClickListener(event -> fireEvent(new UserForm.DeleteEvent(this, binder.getBean())));
         close.addClickListener(event -> fireEvent(new UserForm.CloseEvent(this)));
+        resetPassword.addClickListener(event -> fireEvent(new UserForm.ResetPasswordEvent(this, binder.getBean())));
 
         binder.addStatusChangeListener(e -> save.setEnabled(binder.isValid()));
-        return new HorizontalLayout(save, delete, close);
+        return new HorizontalLayout(save, delete, close, resetPassword);
     }
 
     private void validateAndSave() {
@@ -95,6 +101,11 @@ public class UserForm extends FormLayout {
         }
 
     }
+    public static class ResetPasswordEvent extends UserForm.UserFormEvent {
+        ResetPasswordEvent(UserForm source, User user) {
+            super(source, user);
+        }
+    }
 
     public static class CloseEvent extends UserForm.UserFormEvent {
         CloseEvent(UserForm source) {
@@ -113,6 +124,8 @@ public class UserForm extends FormLayout {
     public Registration addCloseListener(ComponentEventListener<UserForm.CloseEvent> listener) {
         return addListener(UserForm.CloseEvent.class, listener);
     }
-
+    public Registration addResetPasswordListener(ComponentEventListener<UserForm.ResetPasswordEvent> listener) {
+        return addListener(UserForm.ResetPasswordEvent.class, listener);
+    }
 
 }

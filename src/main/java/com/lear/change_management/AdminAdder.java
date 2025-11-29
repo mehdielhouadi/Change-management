@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
@@ -17,6 +18,8 @@ public class AdminAdder implements CommandLineRunner {
     private final UserRepo userRepo;
     @Autowired
     private final RoleRepo roleRepo;
+    @Autowired
+    private final PasswordEncoder encoder;
     @Override
     public void run(String... args) throws Exception {
         Role role = new Role();
@@ -31,7 +34,7 @@ public class AdminAdder implements CommandLineRunner {
             User admin = new User();
             admin.setEmail("admin@lear.com");
             admin.setUserName("admin");
-            admin.setPassword("admin");
+            admin.setPassword(encoder.encode("admin"));
             admin.setRole(role);
             userRepo.save(admin);
         }
