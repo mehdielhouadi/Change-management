@@ -1,13 +1,13 @@
 services:
   changemanagementdb:
-    image: postgres:latest
+    image: postgres:18-alpine
     ports:
       - "5432:5432"
     restart: always
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=change_management
-      - POSTGRES_USER=postgres
     volumes:
       - pg-data:/var/lib/postgresql
     healthcheck:

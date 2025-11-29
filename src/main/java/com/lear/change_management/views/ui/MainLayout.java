@@ -34,7 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.security.Principal;
 
 @Layout
-@RolesAllowed({"ADMIN", "PROD"})
+@RolesAllowed({"ENGINEER", "ADMIN"})
 public class MainLayout extends AppLayout {
     @Autowired
     private AuthenticationContext authContext;

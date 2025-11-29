@@ -3,10 +3,13 @@ package com.lear.change_management.services;
 import com.lear.change_management.entities.User;
 import com.lear.change_management.repositories.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,14 +25,15 @@ public class PasswordResetService {
     private final UserRepo userRepository;
     private static final int EXPIRY_HOURS = 24;
     private final JavaMailSender mailSender;
+    @Autowired
+    private final PasswordEncoder encoder;
+
     @Async
     public void sendWelcomeWithResetLink(User user, String resetToken) {
-        //TODO TEST
-        //TODO create the view for this URL
         String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("changemanagement@lear.com");
+        message.setFrom("mehdi.elhouadi98@gmail.com");
         message.setTo(user.getEmail());
         message.setSubject("Welcome – Set your password");
         message.setText("""
@@ -70,5 +74,20 @@ public class PasswordResetService {
         user.setPasswordResetExpiry(null);
         user.setMustChangePassword(false);
         userRepository.save(user);
+    }
+
+    @Transactional
+    public boolean resetPassword(String token, String value) {
+        User user;
+        try {
+             user = findUserByValidToken(token).orElseThrow(() -> new RuntimeException("invalid token"));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return false;
+        }
+        user.setPassword(encoder.encode(value));
+        clearToken(user);
+        userRepository.save(user);
+        return true;
     }
 }

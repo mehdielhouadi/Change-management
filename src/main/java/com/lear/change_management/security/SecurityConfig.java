@@ -27,26 +27,33 @@ import java.util.Properties;
 @Configuration
 @EnableWebSecurity
 @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
-public class SecurityConfig {
+public class SecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        return http
-                .with(VaadinSecurityConfigurer.vaadin(), configurer -> {
-                    configurer.loginView(LoginView.class);
-                })
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+        http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/forgot-password",
+                                "/reset-password",
+                                "/reset-password/**"
+                        ).permitAll());
+        http.with(VaadinSecurityConfigurer.vaadin(), configurer -> {
+            configurer.loginView(LoginView.class);
+        });
+        http.csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**",
+                                "/forgot-password",
+                                "/reset-password",
+                                "/reset-password/**"))
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .logout(logout -> logout.logoutUrl("/logout"))
-                .build();
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder encoder() {
         return  NoOpPasswordEncoder.getInstance();
     }
-
 
 }

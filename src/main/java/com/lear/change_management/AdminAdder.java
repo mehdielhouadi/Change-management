@@ -37,7 +37,7 @@ public class AdminAdder implements CommandLineRunner {
         }
         Role role1 = new Role();
         if (roleRepo.count() == 1){
-            role1.setName("ROLE_ENGINEER");
+            role1.setName("ROLE_ENGINEERING");
             role1 = roleRepo.save(role1);
         }
 

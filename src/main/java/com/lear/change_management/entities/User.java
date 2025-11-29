@@ -41,6 +41,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @NotNull
     private Role role;
 
     @ManyToMany(mappedBy = "owners", fetch = FetchType.EAGER)
@@ -48,6 +49,7 @@ public class User {
 
     private boolean mustChangePassword = true;
 
+    @Column(unique = true)
     private String passwordResetToken;
 
     private LocalDateTime passwordResetExpiry;

@@ -1,6 +1,8 @@
 package com.lear.change_management.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,8 @@ public class Role {
     private Long id;
 
     @Column(unique = true)
+    @NotEmpty
+    @NotNull
     private String name;
 
     @OneToMany
