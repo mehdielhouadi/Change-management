@@ -7,14 +7,22 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 @Component
 public class JpaDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepo uRepo;
 
+    private boolean mustChangePassword = true;   // ← important flag
+    private String passwordResetToken;
+    private Date passwordResetExpiry;
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return uRepo.findByUserName(username).map(SecurityUser::new).orElseThrow(() -> new UsernameNotFoundException("no such user"));
+        return uRepo.findByUserName(username).map(SecurityUser::new)
+                .orElseThrow(() -> new UsernameNotFoundException("no such user"));
     }
 }

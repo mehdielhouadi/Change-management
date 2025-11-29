@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,4 +46,9 @@ public class User {
     @ManyToMany(mappedBy = "owners", fetch = FetchType.EAGER)
     private Set<SetupStep> SetupStepsAssigned = new HashSet<>();
 
+    private boolean mustChangePassword = true;
+
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetExpiry;
 }

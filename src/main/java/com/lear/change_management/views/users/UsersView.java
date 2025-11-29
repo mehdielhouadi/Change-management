@@ -2,6 +2,7 @@ package com.lear.change_management.views.users;
 
 
 import com.lear.change_management.entities.User;
+import com.lear.change_management.services.PasswordResetService;
 import com.lear.change_management.services.RoleService;
 import com.lear.change_management.services.UserService;
 import com.lear.change_management.views.ui.NestedLayout;
@@ -17,6 +18,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route(value = "users", layout = NestedLayout.class)
 @Menu(title = "users", order = 4, icon = "vaadin:user")
@@ -25,14 +29,22 @@ public class UsersView extends VerticalLayout {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
+    private final PasswordResetService passwordResetService;
+
     Grid<User> grid = new Grid<>(User.class, false);
     TextField filterText = new TextField();
     UserForm form;
 
 
-    public UsersView(UserService userService, RoleService roleService) {
+
+
+    public UsersView(UserService userService, RoleService roleService,
+                     PasswordEncoder passwordEncoder, PasswordResetService passwordResetService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordResetService = passwordResetService;
+        this.passwordEncoder = passwordEncoder;
         setSizeFull();
         configureGrid();
         configureForm();
@@ -55,8 +67,14 @@ public class UsersView extends VerticalLayout {
         closeEditor();
     }
 
+    @Transactional
     private void saveUser(UserForm.SaveEvent event) {
         User user = event.getUser();
+
+        String randomPassword = RandomStringUtils.randomAlphanumeric(32);
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        passwordResetService.createAndSendResetToken(user);
+
         userService.addUser(user);
         updateList();
         closeEditor();
