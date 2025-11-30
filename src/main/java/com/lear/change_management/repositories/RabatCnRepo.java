@@ -1,5 +1,6 @@
 package com.lear.change_management.repositories;
 
+import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
 import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;

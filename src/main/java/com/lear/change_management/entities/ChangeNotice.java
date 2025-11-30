@@ -28,16 +28,22 @@ public class ChangeNotice {
 
     private String status;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            joinColumns = @JoinColumn(name = "rcn_id"),
-            inverseJoinColumns = @JoinColumn(name = "cn_id"))
+            joinColumns = @JoinColumn(name = "cn_id"),
+            inverseJoinColumns = @JoinColumn(name = "rcn_id"))
     private Set<RabatCn> rabatCns = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "cn_id"),
+            inverseJoinColumns = @JoinColumn(name = "variant_id"))
+    private Set<Variant> affectedVariants = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
-            joinColumns = @JoinColumn(name = "setupVariants_id"),
-            inverseJoinColumns = @JoinColumn(name = "cn_id"))
+            joinColumns = @JoinColumn(name = "cn_id"),
+            inverseJoinColumns = @JoinColumn(name = "setupPlan_id"))
     private Set<SetupPlan> setupPlans = new HashSet<>();
 
 

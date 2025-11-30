@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -29,7 +30,20 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<RabatCn> rabatCns = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
     private Set<Variant> variants = new HashSet<>();
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Project project)) return false;
+
+        return Objects.equals(getId(), project.getId()) && Objects.equals(getName(), project.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(getId());
+        result = 31 * result + Objects.hashCode(getName());
+        return result;
+    }
 }

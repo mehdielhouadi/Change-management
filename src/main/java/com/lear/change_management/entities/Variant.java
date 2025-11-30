@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -23,6 +24,18 @@ public class Variant {
 
     private String partNumber;
 
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Variant variant)) return false;
+
+        return Objects.equals(getId(), variant.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
     @ManyToOne
     @JoinColumn(name = "project_id")
     @NotNull
@@ -31,10 +44,10 @@ public class Variant {
     @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
     private Set<SetupPlan> setupPlans = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "variant_id"),
-            inverseJoinColumns = @JoinColumn(name = "rcn_id"))
+    @ManyToMany(mappedBy = "affectedVariants", fetch = FetchType.LAZY)
     private Set<RabatCn> rabatCns = new HashSet<>();
 
+
+    @ManyToMany(mappedBy = "affectedVariants", fetch = FetchType.LAZY)
+    private Set<ChangeNotice> cns = new HashSet<>();
 }

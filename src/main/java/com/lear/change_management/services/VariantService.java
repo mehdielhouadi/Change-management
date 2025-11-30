@@ -1,5 +1,6 @@
 package com.lear.change_management.services;
 
+import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.Variant;
 import com.lear.change_management.repositories.VariantRepo;
 import jakarta.persistence.Entity;
@@ -40,5 +41,9 @@ public class VariantService {
         else {
                 return variantRepo.findAllFiltered(filterText);
         }
+    }
+
+    public List<Variant> getVariantsOfProject(Project selectedProjects) {
+        return variantRepo.findAllByProject(selectedProjects);
     }
 }

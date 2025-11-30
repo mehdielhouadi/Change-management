@@ -30,7 +30,7 @@ public class CnForm extends FormLayout {
     TextField description = new TextField("Description");
     ComboBox<String> status = new ComboBox<>("Status");
     //CheckboxGroup<Project> projects = new CheckboxGroup<>("Projects");
-    CheckboxGroup<RabatCn> rabatCns = new CheckboxGroup<>("RabatCn");
+    MultiSelectComboBox<RabatCn> rabatCns = new MultiSelectComboBox<>("RabatCn");
     MultiSelectComboBox<Project> projects = new MultiSelectComboBox<>("projects");
 
     Button save = new Button("Save");
@@ -40,11 +40,13 @@ public class CnForm extends FormLayout {
 
     final RabatCnService rcnService;
 
-    public CnForm(List<Project> projects, RabatCnService rcnService) {
+    public CnForm(List<Project> projects,  RabatCnService rcnService) {
         this.rcnService = rcnService;
         addClassName("cn-form");
 
         binder.bindInstanceFields(this);
+        binder.forField(rabatCns)
+                .bind(ChangeNotice::getRabatCns, ChangeNotice::setRabatCns);
 
         nature.setItems("HW", "SW", "HW/SW");
         status.setItems("IN PROGRESS", "DONE");
@@ -55,6 +57,7 @@ public class CnForm extends FormLayout {
 
         this.rabatCns.setLabel("Select RCNs");
         this.rabatCns.setItemLabelGenerator(RabatCn::getName);
+        this.rabatCns.setItems(rcnService.getAllRcns());
 
         this.projects.addValueChangeListener(event -> {
             List<Project> selectedProjects = event
@@ -100,7 +103,7 @@ public class CnForm extends FormLayout {
     }
 
     public void setCn(ChangeNotice changeNotice) {
-        binder.setBean(changeNotice); // <1>
+        binder.setBean(changeNotice);
     }
 
     // Events

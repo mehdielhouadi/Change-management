@@ -2,11 +2,14 @@ package com.lear.change_management.views.rcn;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
+import com.lear.change_management.entities.Variant;
 import com.lear.change_management.services.RabatCnService;
+import com.lear.change_management.services.VariantService;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -20,24 +23,46 @@ import java.util.List;
 public class RcnForm extends FormLayout {
 
     private final RabatCnService rcnService;
+    private final VariantService variantService;
 
     TextField name = new TextField("RCN Name");
     TextField status = new TextField("Status");
     ComboBox<Project> project = new ComboBox<>("Project");
+    MultiSelectComboBox<Variant> affectedVariants = new MultiSelectComboBox<>("Variants");
     Button save = new Button("Save");
     Button delete = new Button("Delete");
     Button close = new Button("Cancel");
     Binder<RabatCn> binder = new BeanValidationBinder<>(RabatCn.class);
 
 
-    public RcnForm(List<Project> projects, RabatCnService rcnService) {
+    public RcnForm(List<Project> projects, RabatCnService rcnService, VariantService variantService) {
         this.rcnService = rcnService;
+        this.variantService = variantService;
         name.setReadOnly(true);
         addClassName("rcn-form");
         binder.bindInstanceFields(this);
+        binder.forField(affectedVariants).bind(RabatCn::getAffectedVariants, RabatCn::setAffectedVariants);
+
         project.setItems(projects);
         project.setItemLabelGenerator(Project::getName);
-        add(name, status, project, createButtonsLayout());
+
+
+        affectedVariants.setItemLabelGenerator(Variant::getPartNumber);
+        List<Variant> vars = variantService.getAll();
+        affectedVariants.setItems(vars);
+
+        project.addValueChangeListener(e -> {
+            Project selectedProjects = e.getValue();
+            if (selectedProjects!=null) {
+                List<Variant> variantsOfSelectedProj = variantService.getAll()
+                        .stream()
+                        .filter(variant -> variant.getProject().equals(selectedProjects))
+                        .toList();
+                affectedVariants.setItems(variantsOfSelectedProj);
+            }
+        });
+
+        add(name, status, project, affectedVariants,createButtonsLayout());
     }
 
     private Component createButtonsLayout() {

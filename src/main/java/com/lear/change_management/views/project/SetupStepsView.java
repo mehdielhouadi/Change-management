@@ -42,7 +42,7 @@ public class SetupStepsView extends VerticalLayout implements HasUrlParameter<St
         Map<String, List<String>> parametersMap = queryParameters
                 .getParameters();
         List<String> projectIdList = parametersMap.get("id");
-        String projectIdString = projectIdList.get(0);
+        String projectIdString = projectIdList.getFirst();
         try {
             projectId = Long.valueOf(projectIdString);
         } catch (NumberFormatException exception) {

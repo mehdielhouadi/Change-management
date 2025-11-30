@@ -10,6 +10,7 @@ import com.lear.change_management.views.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -19,14 +20,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.RolesAllowed;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Route(value = "CNs", layout = NestedLayout.class)
 @Menu(title = "CNs", order = 4, icon = "vaadin:bullets")
@@ -67,7 +66,6 @@ public class CnsView extends VerticalLayout {
 
     private void configureForm() {
         List<Project> projectSet = projectService.getAllProjects();
-
         form = new CnForm(projectSet, this.rabatCnService);
         form.setWidth("25em");
         form.addSaveListener(this::saveCn);
@@ -121,6 +119,17 @@ public class CnsView extends VerticalLayout {
 
         grid.asSingleSelect().addValueChangeListener(event ->
                 editCn(event.getValue()));
+        GridContextMenu<ChangeNotice> menu = grid.addContextMenu();
+        menu.addItem("View setup plans", event -> {
+            menu.getUI().ifPresent(ui -> ui
+                    .navigate(SetupPlansView.class,
+                            QueryParameters.of("CNid", event.getItem()
+                                    .orElseThrow(() -> new RuntimeException("cn invalid"))
+                                    .getId().toString()
+                            )
+                    )
+            );
+        });
     }
 
     private Component createRcnCardList(ChangeNotice changeNotice) {
@@ -181,9 +190,9 @@ public class CnsView extends VerticalLayout {
             created.getStyle().set("color", "var(--lumo-secondary-text-color)");
 
             // Change notice count
-            int count = rcn.getChangeNotices() == null ? 0 : rcn.getChangeNotices().size();
-            Span cnCount = new Span("Change Notices: " + count);
-            cnCount.getStyle().set("color", "var(--lumo-secondary-text-color)");
+//            int count = rcn.getChangeNotices() == null ? 0 : rcn.getChangeNotices().size();
+//            Span cnCount = new Span("Change Notices: " + count);
+//            cnCount.getStyle().set("color", "var(--lumo-secondary-text-color)");
 
             // Top row layout (title + badge)
             HorizontalLayout header = new HorizontalLayout(cardTitle, status);
@@ -192,7 +201,7 @@ public class CnsView extends VerticalLayout {
             header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
             // Details section layout
-            VerticalLayout details = new VerticalLayout(created, cnCount);
+            VerticalLayout details = new VerticalLayout(created/*, cnCount*/);
             details.setSpacing(false);
             details.setPadding(false);
 

@@ -1,5 +1,6 @@
 package com.lear.change_management.repositories;
 
+import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.Variant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +14,7 @@ public interface VariantRepo extends JpaRepository<Variant, Long> {
             like lower(concat('%', :filterText, '%'))
             """)
     List<Variant> findAllFiltered(@Param("filterText") String filterText);
+
+
+    List<Variant> findAllByProject(Project project);
 }

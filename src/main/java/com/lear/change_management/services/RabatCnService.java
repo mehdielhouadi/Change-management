@@ -1,5 +1,6 @@
 package com.lear.change_management.services;
 
+import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.repositories.RabatCnRepo;
@@ -59,4 +60,7 @@ public class RabatCnService {
         }
     }
 
+    public RabatCn getRcnById(Long id) {
+        return rabatCnRepo.findById(id).orElseThrow(() -> new RuntimeException("no rcn with this id"));
+    }
 }

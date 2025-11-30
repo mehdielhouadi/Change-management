@@ -3,6 +3,7 @@ package com.lear.change_management.views.rcn;
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
+import com.lear.change_management.services.VariantService;
 import com.lear.change_management.views.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -25,15 +26,17 @@ public class RabatCnsView extends VerticalLayout {
 
     final RabatCnService rabatCnService;
     final ProjectService projectService;
+    final VariantService variantService;
 
     Grid<RabatCn> grid = new Grid<>(RabatCn.class, false);
     TextField filterText = new TextField();
     RcnForm form;
 
 
-    public RabatCnsView(RabatCnService rabatCnService, ProjectService projectService) {
+    public RabatCnsView(RabatCnService rabatCnService, ProjectService projectService, VariantService variantService) {
         this.rabatCnService = rabatCnService;
         this.projectService = projectService;
+        this.variantService = variantService;
         addClassName("Rcns-view");
         setSizeFull();
         configureGrid();
@@ -54,7 +57,7 @@ public class RabatCnsView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new RcnForm(projectService.getAllProjects(), this.rabatCnService);
+        form = new RcnForm(projectService.getAllProjects(), this.rabatCnService, this.variantService);
         form.setWidth("25em");
         form.addSaveListener(this::saveRcn);
         form.addDeleteListener(this::deleteRcn);
@@ -88,8 +91,15 @@ public class RabatCnsView extends VerticalLayout {
         if (rabatCn == null) {
             closeEditor();
         } else {
+            if (rabatCn.getId() != null) {
+                rabatCn = rabatCnService.getRcnById(rabatCn.getId());
+                form.affectedVariants.setItems(rabatCn.getAffectedVariants());
+                form.setRcn(rabatCn);
+                form.setVisible(true);
+                addClassName("editing");
+                return;
+            }
             form.setRcn(rabatCn);
-
             form.setVisible(true);
             addClassName("editing");
         }

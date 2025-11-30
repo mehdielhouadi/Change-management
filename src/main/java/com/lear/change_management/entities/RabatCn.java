@@ -32,10 +32,14 @@ public class RabatCn {
     @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.LAZY)
     private Set<ChangeNotice> changeNotices = new HashSet<>();
 
-    @ManyToMany(mappedBy = "rabatCns", fetch = FetchType.LAZY)
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "rcn_id"),
+            inverseJoinColumns = @JoinColumn(name = "variant_id"))
     private Set<Variant> affectedVariants = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     @NotNull
     private Project project;
@@ -48,17 +52,13 @@ public class RabatCn {
 
     @Override
     public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        RabatCn rabatCn = (RabatCn) o;
-        return getId() != null && Objects.equals(getId(), rabatCn.getId());
+        if (!(o instanceof RabatCn rabatCn)) return false;
+
+        return Objects.equals(getId(), rabatCn.getId());
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 }
