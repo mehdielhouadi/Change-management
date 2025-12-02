@@ -24,13 +24,16 @@ public class Project {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SetupStep> setupSteps = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<RabatCn> rabatCns = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ChangeNotice> cns = new HashSet<>();
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Variant> variants = new HashSet<>();
 
     @Override
@@ -39,11 +42,15 @@ public class Project {
 
         return Objects.equals(getId(), project.getId()) && Objects.equals(getName(), project.getName());
     }
-
     @Override
     public int hashCode() {
         int result = Objects.hashCode(getId());
         result = 31 * result + Objects.hashCode(getName());
         return result;
     }
+
+    public void deleteCn(ChangeNotice changeNotice) {
+        this.getCns().remove(changeNotice);
+    }
+
 }

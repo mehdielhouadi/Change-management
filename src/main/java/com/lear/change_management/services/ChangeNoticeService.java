@@ -3,6 +3,7 @@ package com.lear.change_management.services;
 import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.repositories.ChangeNoticeRepo;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,12 @@ public class ChangeNoticeService {
         cnRepo.save(changeNotice);
     }
 
+
     public void deleteCn(ChangeNotice changeNotice) {
         cnRepo.delete(changeNotice);
+    }
+
+    public ChangeNotice getById(Long id) {
+        return cnRepo.findById(id).orElseThrow(() -> new RuntimeException("no such cn"));
     }
 }

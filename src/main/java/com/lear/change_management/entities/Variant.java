@@ -1,5 +1,6 @@
 package com.lear.change_management.entities;
 
+import com.github.javaparser.printer.lexicalpreservation.changes.Change;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,12 +29,14 @@ public class Variant {
     public final boolean equals(Object o) {
         if (!(o instanceof Variant variant)) return false;
 
-        return Objects.equals(getId(), variant.getId());
+        return Objects.equals(getId(), variant.getId()) && Objects.equals(getPartNumber(), variant.getPartNumber());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId());
+        int result = Objects.hashCode(getId());
+        result = 31 * result + Objects.hashCode(getPartNumber());
+        return result;
     }
 
     @ManyToOne
@@ -50,4 +53,8 @@ public class Variant {
 
     @ManyToMany(mappedBy = "affectedVariants", fetch = FetchType.LAZY)
     private Set<ChangeNotice> cns = new HashSet<>();
+
+    public void deleteCn(ChangeNotice changeNotice) {
+        this.getCns().remove(changeNotice);
+    }
 }

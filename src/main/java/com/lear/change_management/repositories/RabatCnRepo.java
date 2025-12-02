@@ -25,4 +25,9 @@ public interface RabatCnRepo extends JpaRepository<RabatCn, Long> {
     List<RabatCn> searchAllWithCns(@Param("filterText") String filterText);
 
     List<RabatCn> findAllByProjectName(String projetName);
+
+    @Query("SELECT cn FROM RabatCn rcn LEFT JOIN rcn.changeNotices cn WHERE rcn = :rcn")
+    List<ChangeNotice> findAllCnsOfRcn(@Param("rcn") RabatCn rcn);
+
+    List<RabatCn> findAllByChangeNotices(ChangeNotice cn);
 }

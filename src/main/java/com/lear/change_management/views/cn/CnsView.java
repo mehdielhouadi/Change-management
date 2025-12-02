@@ -6,6 +6,7 @@ import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.services.ChangeNoticeService;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
+import com.lear.change_management.services.VariantService;
 import com.lear.change_management.views.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -35,16 +36,18 @@ public class CnsView extends VerticalLayout {
     final ChangeNoticeService cnService;
     final RabatCnService rabatCnService;
     final ProjectService projectService;
+    final VariantService variantService;
 
     Grid<ChangeNotice> grid = new Grid<>(ChangeNotice.class, false);
     TextField filterText = new TextField();
     CnForm form;
 
 
-    public CnsView(ChangeNoticeService cnService, RabatCnService rabatCnService, ProjectService projectService) {
+    public CnsView(ChangeNoticeService cnService, RabatCnService rabatCnService, ProjectService projectService, VariantService variantService) {
         this.cnService = cnService;
         this.rabatCnService = rabatCnService;
         this.projectService = projectService;
+        this.variantService = variantService;
         addClassName("cns-view");
         setSizeFull();
         configureGrid();
@@ -66,7 +69,7 @@ public class CnsView extends VerticalLayout {
 
     private void configureForm() {
         List<Project> projectSet = projectService.getAllProjects();
-        form = new CnForm(projectSet, this.rabatCnService);
+        form = new CnForm(projectSet, this.rabatCnService, this.variantService);
         form.setWidth("25em");
         form.addSaveListener(this::saveCn);
         form.addDeleteListener(this::deleteCn);
@@ -97,6 +100,9 @@ public class CnsView extends VerticalLayout {
         if (changeNotice == null) {
             closeEditor();
         } else {
+            if (changeNotice.getId() != null) {
+                changeNotice = cnService.getById(changeNotice.getId());
+            }
             form.setCn(changeNotice);
             form.setVisible(true);
             addClassName("editing");

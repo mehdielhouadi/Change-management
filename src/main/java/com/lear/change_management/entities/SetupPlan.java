@@ -1,6 +1,7 @@
 package com.lear.change_management.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,4 +28,21 @@ public class SetupPlan {
     @OneToMany(mappedBy = "setupPlan", fetch = FetchType.LAZY)
     private Set<SetupEntry> setupEntries = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "cn_id")
+    private ChangeNotice cn;
+
+
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof SetupPlan setupPlan)) return false;
+
+        return getId().equals(setupPlan.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
 }

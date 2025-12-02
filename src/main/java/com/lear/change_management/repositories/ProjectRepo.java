@@ -1,6 +1,7 @@
 package com.lear.change_management.repositories;
 
 import com.lear.change_management.entities.Project;
+import com.lear.change_management.entities.RabatCn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,6 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
+    @Query("SELECT rcn FROM Project p LEFT JOIN p.rabatCns rcn WHERE p=:p ")
+    List<RabatCn> findRcnsOfProj(@Param("p") Project project);
 }

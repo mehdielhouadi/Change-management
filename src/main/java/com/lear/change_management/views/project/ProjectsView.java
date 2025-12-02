@@ -2,6 +2,7 @@ package com.lear.change_management.views.project;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
+import com.lear.change_management.services.ChangeNoticeService;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.views.ui.NestedLayout;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Route(value = "projects", layout = NestedLayout.class)
 @Menu(title = "Projects", order = 2, icon = "vaadin:briefcase")
@@ -38,15 +40,17 @@ public class ProjectsView extends VerticalLayout {
     private final ProjectService projectService;
     @Autowired
     private final RabatCnService rabatCnService;
+    private final ChangeNoticeService cnService;
 
     private Grid<Project> grid = new Grid<>(Project.class, false);
     private TextField nameField = new TextField("Project name");
     private Project selectedProject = null;
     TextField filterText = new TextField();
 
-    public ProjectsView(ProjectService projectService, RabatCnService rabatCnService) {
+    public ProjectsView(ProjectService projectService, RabatCnService rabatCnService, ChangeNoticeService cnService) {
         this.projectService = projectService;
         this.rabatCnService = rabatCnService;
+        this.cnService = cnService;
 
         setSizeFull();
         add(createToolbar(), createGrid());
@@ -93,12 +97,7 @@ public class ProjectsView extends VerticalLayout {
                 dialog.setConfirmText("Delete");
 
                 dialog.addConfirmListener(event -> {
-                    // Delete all RCNs related to the project
-                    projectService.getProjectWithRcns(project)
-                            .forEach(p -> p.getRabatCns().forEach(rabatCnService::deleteRcn));
-
-                    projectService.deleteProject(project.getId());
-
+                    projectService.deleteProject(project);
                     refreshGrid("");
                     Notification.show("Project and related RCns deleted.", 2000, Notification.Position.MIDDLE);
                 });

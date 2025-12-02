@@ -61,4 +61,9 @@ public class RabatCn {
     public int hashCode() {
         return Objects.hashCode(getId());
     }
+
+    public void deleteCn(ChangeNotice changeNotice) {
+        this.getChangeNotices().remove(changeNotice);
+    }
+
 }

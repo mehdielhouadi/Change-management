@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Service
 public class RabatCnService {
@@ -62,5 +63,17 @@ public class RabatCnService {
 
     public RabatCn getRcnById(Long id) {
         return rabatCnRepo.findById(id).orElseThrow(() -> new RuntimeException("no rcn with this id"));
+    }
+
+    public List<ChangeNotice> getAllCnsOfRcn(RabatCn rcn) {
+        return rabatCnRepo.findAllCnsOfRcn(rcn);
+    }
+
+    public List<RabatCn> getAllRcnsOfCn(ChangeNotice cn) {
+        return rabatCnRepo.findAllByChangeNotices(cn);
+    }
+
+    public void deleteListOfRcns(List<RabatCn> rabatCnsOfProj) {
+        rabatCnRepo.deleteAllById(rabatCnsOfProj.stream().map(RabatCn::getId).toList());
     }
 }

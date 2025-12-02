@@ -94,10 +94,6 @@ public class RabatCnsView extends VerticalLayout {
             if (rabatCn.getId() != null) {
                 rabatCn = rabatCnService.getRcnById(rabatCn.getId());
                 form.affectedVariants.setItems(rabatCn.getAffectedVariants());
-                form.setRcn(rabatCn);
-                form.setVisible(true);
-                addClassName("editing");
-                return;
             }
             form.setRcn(rabatCn);
             form.setVisible(true);

@@ -3,16 +3,9 @@ package com.lear.change_management.services;
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.repositories.ProjectRepo;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +42,7 @@ public class ProjectService {
         return projectRepo.existsByNameIgnoreCase(name);
     }
 
-    public void deleteProject(Long id) {
+    public void deleteProjectById(Long id) {
         projectRepo.deleteById(id);
     }
 
@@ -86,6 +79,11 @@ public class ProjectService {
     }
 
 
+    public List<RabatCn> getRcnsOfProj(Project project) {
+        return projectRepo.findRcnsOfProj(project);
+    }
 
-
+    public void deleteProject(Project project) {
+        projectRepo.delete(project);
+    }
 }
