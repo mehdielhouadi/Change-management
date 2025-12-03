@@ -81,14 +81,14 @@ public class CnForm extends FormLayout {
         List<Variant> vars = variantService.getAll();
         this.variants.setItems(vars);
 
-//        this.project.addValueChangeListener(event -> {
-//            Project selectedProject = event.getValue();
-//            List<RabatCn> filtered = rcns.stream()
-//                    .filter(rabatCn -> selectedProject.getRabatCns().contains(rabatCn))
-//                    .toList();
-//            this.rabatCns.setItems(filtered);
-//            this.rabatCns.clear();
-//        });
+        this.project.addValueChangeListener(event -> {
+            Project selectedProject = event.getValue();
+            List<RabatCn> filtered = rcns.stream()
+                    .filter(rabatCn -> selectedProject.getRabatCns().contains(rabatCn))
+                    .toList();
+            this.rabatCns.setItems(filtered);
+            this.rabatCns.clear();
+        });
 
         this.rabatCns.addValueChangeListener(event -> {
             Set<RabatCn> oldRcns = event.getOldValue();
@@ -108,11 +108,11 @@ public class CnForm extends FormLayout {
                             .stream()
                             .anyMatch(rabatCn -> rabatCn.getAffectedVariants().contains(var)))
                     .toList();
-            List<Variant> combined = Stream.concat(filtered.stream(), oldVars.stream())
-                    .distinct()     // optional if you want to remove duplicates
-                    .toList();
+//            List<Variant> combined = Stream.concat(filtered.stream(), oldVars.stream())
+//                    .distinct()
+//                    .toList();
             this.variants.setValue(oldVars);
-            this.variants.setItems(combined);
+            this.variants.setItems(filtered);
         });
 
 
