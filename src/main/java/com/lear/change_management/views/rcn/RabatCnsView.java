@@ -131,7 +131,8 @@ public class RabatCnsView extends VerticalLayout {
         closeEditor();
     }
     private void deleteRcn(RcnForm.DeleteEvent event) {
-        rabatCnService.deleteRcn(event.getRabatCn());
+        RabatCn rcn = rabatCnService.getRcnById(event.getRabatCn().getId());
+        rabatCnService.deleteRcn(rcn);
         updateList();
         closeEditor();
     }

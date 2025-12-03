@@ -3,17 +3,23 @@ package com.lear.change_management.services;
 import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
+import com.lear.change_management.repositories.ChangeNoticeRepo;
+import com.lear.change_management.repositories.ProjectRepo;
 import com.lear.change_management.repositories.RabatCnRepo;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @Service
@@ -21,6 +27,10 @@ public class RabatCnService {
 
     @Autowired
     private RabatCnRepo rabatCnRepo;
+    @Autowired
+    private ChangeNoticeRepo cnRepo;
+    @Autowired
+    private ProjectRepo pRepo;
 
     public void addRcn(RabatCn rabatCn) {
         rabatCnRepo.save(rabatCn);
@@ -31,9 +41,25 @@ public class RabatCnService {
        return rabatCnRepo.count();
     }
 
+    @Transactional
+    public void deleteRcn(RabatCn rcn) {
+        Project project = pRepo.findById(rcn.getProject().getId())
+                .orElseThrow(() -> new RuntimeException("Project not found"));
 
-    public void deleteRcn(RabatCn rabatCn) {
-        rabatCnRepo.delete(rabatCn);
+        // remove rcn from all the cns that contain it
+        for (ChangeNotice cn : getAllCnsOfRcn(rcn)) {
+            if (cn!=null) {
+                cn.getRabatCns().remove(rcn);
+                break;
+            }
+        }
+        rcn.setChangeNotices(Set.of());
+        rcn.getAffectedVariants().clear();
+        project.getRabatCns().remove(rcn);
+
+        // p.save after removing from list bc orphan removal
+        pRepo.save(project);
+
     }
 
     public List<RabatCn> getRcnsOfProject(Project project) {

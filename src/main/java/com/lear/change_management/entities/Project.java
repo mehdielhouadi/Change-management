@@ -27,7 +27,7 @@ public class Project {
     @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SetupStep> setupSteps = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RabatCn> rabatCns = new HashSet<>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -40,13 +40,12 @@ public class Project {
     public final boolean equals(Object o) {
         if (!(o instanceof Project project)) return false;
 
-        return Objects.equals(getId(), project.getId()) && Objects.equals(getName(), project.getName());
+        return getId().equals(project.getId());
     }
+
     @Override
     public int hashCode() {
-        int result = Objects.hashCode(getId());
-        result = 31 * result + Objects.hashCode(getName());
-        return result;
+        return getId().hashCode();
     }
 
     public void deleteCn(ChangeNotice changeNotice) {
