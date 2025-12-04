@@ -111,8 +111,8 @@ public class CnForm extends FormLayout {
 //            List<Variant> combined = Stream.concat(filtered.stream(), oldVars.stream())
 //                    .distinct()
 //                    .toList();
-            this.variants.setValue(oldVars);
             this.variants.setItems(filtered);
+            this.variants.setValue(oldVars);
         });
 
 

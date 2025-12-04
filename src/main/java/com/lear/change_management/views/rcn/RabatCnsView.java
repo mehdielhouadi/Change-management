@@ -88,12 +88,13 @@ public class RabatCnsView extends VerticalLayout {
     }
 
     public void editRcn(RabatCn rabatCn) {
+        form.affectedVariants.setItems(variantService.getAll());
         if (rabatCn == null) {
             closeEditor();
         } else {
             if (rabatCn.getId() != null) {
                 rabatCn = rabatCnService.getRcnById(rabatCn.getId());
-                form.affectedVariants.setItems(rabatCn.getAffectedVariants());
+
             }
             form.setRcn(rabatCn);
             form.setVisible(true);

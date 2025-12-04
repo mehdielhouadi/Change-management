@@ -40,7 +40,9 @@ public class RcnForm extends FormLayout {
         this.variantService = variantService;
         name.setReadOnly(true);
         addClassName("rcn-form");
-        binder.bindInstanceFields(this);
+        binder.forField(name).bind(RabatCn::getName, RabatCn::setName);
+        binder.forField(status).bind(RabatCn::getStatus, RabatCn::setStatus);
+        binder.forField(project).bind(RabatCn::getProject, RabatCn::setProject);
         binder.forField(affectedVariants).bind(RabatCn::getAffectedVariants, RabatCn::setAffectedVariants);
 
         project.setItems(projects);
