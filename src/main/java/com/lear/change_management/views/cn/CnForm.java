@@ -21,8 +21,10 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -82,37 +84,37 @@ public class CnForm extends FormLayout {
         this.variants.setItems(vars);
 
         this.project.addValueChangeListener(event -> {
-            Project selectedProject = event.getValue();
-            List<RabatCn> filtered = rcns.stream()
-                    .filter(rabatCn -> selectedProject.getRabatCns().contains(rabatCn))
-                    .toList();
-            this.rabatCns.setItems(filtered);
-            this.rabatCns.clear();
+            if (!event.getHasValue().isEmpty()) {
+                Project selectedProject = event.getValue();
+                List<RabatCn> filtered = rcns.stream()
+                        .filter(rabatCn -> selectedProject.getRabatCns().contains(rabatCn))
+                        .toList();
+                Set<RabatCn> oldSelection = new HashSet<>(rabatCns.getValue());
+                this.rabatCns.setItems(filtered);
+                oldSelection.retainAll(filtered);
+                rabatCns.setValue(oldSelection);
+                Set<Variant> filteredVariants =
+                        oldSelection.stream()
+                                .flatMap(r -> r.getAffectedVariants().stream())
+                                .collect(java.util.stream.Collectors.toSet());
+                Set<Variant> oldVarSelection = new HashSet<>(variants.getValue());
+                variants.setItems(filteredVariants);
+                oldVarSelection.retainAll(filteredVariants);
+                variants.setValue(oldVarSelection);
+            }
         });
 
         this.rabatCns.addValueChangeListener(event -> {
-            Set<RabatCn> oldRcns = event.getOldValue();
-            List<Variant> oldVars = oldRcns.stream()
-                    .flatMap(rcn -> rcn.getAffectedVariants().stream())
-                    .toList();
-            List<RabatCn> selectedRcns = event
-                    .getValue()
-                    .stream()
-                    .toList();
+            Set<RabatCn> oldSelection = new HashSet<>(rabatCns.getValue());
+            Set<Variant> filteredVariants =
+                    oldSelection.stream()
+                            .flatMap(r -> r.getAffectedVariants().stream())
+                            .collect(java.util.stream.Collectors.toSet());
 
-
-            // TODO
-            List<Variant> filtered = vars
-                    .stream()
-                    .filter(var -> selectedRcns
-                            .stream()
-                            .anyMatch(rabatCn -> rabatCn.getAffectedVariants().contains(var)))
-                    .toList();
-//            List<Variant> combined = Stream.concat(filtered.stream(), oldVars.stream())
-//                    .distinct()
-//                    .toList();
-            this.variants.setItems(filtered);
-            this.variants.setValue(oldVars);
+            Set<Variant> oldVarSelection = new HashSet<>(variants.getValue());
+            variants.setItems(filteredVariants);
+            oldVarSelection.retainAll(filteredVariants);
+            variants.setValue(oldVarSelection);
         });
 
 

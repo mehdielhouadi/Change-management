@@ -97,6 +97,8 @@ public class CnsView extends VerticalLayout {
     }
 
     public void editCn(ChangeNotice changeNotice) {
+        form.rabatCns.setItems(rabatCnService.getAllRcns());
+        form.variants.setItems(variantService.getAll());
         if (changeNotice == null) {
             closeEditor();
         } else {
@@ -139,6 +141,7 @@ public class CnsView extends VerticalLayout {
     }
 
     private Component createRcnCardList(ChangeNotice changeNotice) {
+        changeNotice = cnService.getById(changeNotice.getId());
         VerticalLayout container = new VerticalLayout();
         container.setPadding(false);
         container.setSpacing(true);
@@ -221,7 +224,8 @@ public class CnsView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(cnService.getAllCns(filterText.getValue()));
+        var testt =  cnService.getAllCns(filterText.getValue());
+        grid.setItems(testt);
     }
 
     private void saveCn(CnForm.SaveEvent event) {
