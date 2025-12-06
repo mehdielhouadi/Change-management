@@ -50,9 +50,6 @@ public class RcnForm extends FormLayout {
 
 
         affectedVariants.setItemLabelGenerator(Variant::getPartNumber);
-        List<Variant> vars = variantService.getAll();
-        affectedVariants.setItems(vars);
-
         project.addValueChangeListener(e -> {
             Project selectedProjects = e.getValue();
             if (selectedProjects!=null) {

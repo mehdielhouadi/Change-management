@@ -102,4 +102,8 @@ public class RabatCnService {
     public void deleteListOfRcns(List<RabatCn> rabatCnsOfProj) {
         rabatCnRepo.deleteAllById(rabatCnsOfProj.stream().map(RabatCn::getId).toList());
     }
+
+    public Long getLastId() {
+        return rabatCnRepo.findLastId();
+    }
 }

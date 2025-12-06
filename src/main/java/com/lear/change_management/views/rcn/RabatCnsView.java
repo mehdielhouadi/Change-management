@@ -82,19 +82,20 @@ public class RabatCnsView extends VerticalLayout {
 
     private void addRcn() {
         grid.asSingleSelect().clear();
+        form.affectedVariants.setItems();
         RabatCn rcn = new RabatCn();
-        rcn.setName("RCN - " +  rabatCnService.getCount());
+        rcn.setName("RCN - " +  (rabatCnService.getLastId() + 1));
         editRcn(rcn);
     }
 
     public void editRcn(RabatCn rabatCn) {
-        form.affectedVariants.setItems(variantService.getAll());
+
         if (rabatCn == null) {
             closeEditor();
         } else {
             if (rabatCn.getId() != null) {
+                form.affectedVariants.setItems(variantService.getAll());
                 rabatCn = rabatCnService.getRcnById(rabatCn.getId());
-
             }
             form.setRcn(rabatCn);
             form.setVisible(true);

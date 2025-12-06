@@ -30,4 +30,7 @@ public interface RabatCnRepo extends JpaRepository<RabatCn, Long> {
     List<ChangeNotice> findAllCnsOfRcn(@Param("rcn") RabatCn rcn);
 
     List<RabatCn> findAllByChangeNotices(ChangeNotice cn);
+
+    @Query("SELECT MAX(id) FROM RabatCn rcn")
+    Long findLastId();
 }
