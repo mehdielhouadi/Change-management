@@ -1,4 +1,4 @@
-package com.lear.change_management.views.rcn;
+package com.lear.change_management.views.adminviews.rcn;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;

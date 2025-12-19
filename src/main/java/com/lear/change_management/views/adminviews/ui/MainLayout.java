@@ -1,4 +1,4 @@
-package com.lear.change_management.views.ui;
+package com.lear.change_management.views.adminviews.ui;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;

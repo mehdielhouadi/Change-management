@@ -1,4 +1,4 @@
-package com.lear.change_management.views.project;
+package com.lear.change_management.views.adminviews.project;
 
 import com.lear.change_management.entities.*;
 import com.lear.change_management.services.ProjectService;

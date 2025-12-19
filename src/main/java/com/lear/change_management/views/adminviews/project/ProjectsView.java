@@ -1,11 +1,11 @@
-package com.lear.change_management.views.project;
+package com.lear.change_management.views.adminviews.project;
 
 import com.lear.change_management.entities.Project;
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.services.ChangeNoticeService;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
-import com.lear.change_management.views.ui.NestedLayout;
+import com.lear.change_management.views.adminviews.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Route(value = "projects", layout = NestedLayout.class)
 @Menu(title = "Projects", order = 2, icon = "vaadin:briefcase")

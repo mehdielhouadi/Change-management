@@ -1,4 +1,4 @@
-package com.lear.change_management.views.cn;
+package com.lear.change_management.views.adminviews.cn;
 
 import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
@@ -7,12 +7,11 @@ import com.lear.change_management.services.ChangeNoticeService;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.services.VariantService;
-import com.lear.change_management.views.ui.NestedLayout;
+import com.lear.change_management.views.adminviews.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

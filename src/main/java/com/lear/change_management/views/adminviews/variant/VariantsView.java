@@ -1,11 +1,11 @@
-package com.lear.change_management.views.variant;
+package com.lear.change_management.views.adminviews.variant;
 
 import com.lear.change_management.entities.Variant;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RoleService;
 import com.lear.change_management.services.UserService;
 import com.lear.change_management.services.VariantService;
-import com.lear.change_management.views.ui.NestedLayout;
+import com.lear.change_management.views.adminviews.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

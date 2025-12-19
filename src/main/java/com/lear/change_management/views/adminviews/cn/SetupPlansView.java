@@ -1,11 +1,6 @@
-package com.lear.change_management.views.cn;
+package com.lear.change_management.views.adminviews.cn;
 
 import com.lear.change_management.entities.SetupPlan;
-import com.lear.change_management.entities.SetupStep;
-import com.lear.change_management.services.ProjectService;
-import com.lear.change_management.services.SetupStepService;
-import com.lear.change_management.services.UserService;
-import com.lear.change_management.views.project.SetupStepForm;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;

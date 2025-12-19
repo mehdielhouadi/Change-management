@@ -1,4 +1,4 @@
-package com.lear.change_management.views.cn;
+package com.lear.change_management.views.adminviews.cn;
 
 import com.lear.change_management.entities.ChangeNotice;
 import com.lear.change_management.entities.Project;
@@ -24,8 +24,6 @@ import com.vaadin.flow.shared.Registration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class CnForm extends FormLayout {

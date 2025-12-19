@@ -1,10 +1,10 @@
-package com.lear.change_management.views.rcn;
+package com.lear.change_management.views.adminviews.rcn;
 
 import com.lear.change_management.entities.RabatCn;
 import com.lear.change_management.services.ProjectService;
 import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.services.VariantService;
-import com.lear.change_management.views.ui.NestedLayout;
+import com.lear.change_management.views.adminviews.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

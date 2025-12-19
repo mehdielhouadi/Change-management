@@ -1,22 +1,18 @@
-package com.lear.change_management.views.project;
+package com.lear.change_management.views.adminviews.project;
 
 import com.lear.change_management.entities.SetupStep;
 import com.lear.change_management.entities.User;
 import com.lear.change_management.services.ProjectService;
-import com.lear.change_management.services.RabatCnService;
 import com.lear.change_management.services.SetupStepService;
 import com.lear.change_management.services.UserService;
-import com.lear.change_management.views.users.UserForm;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.*;
 import jakarta.annotation.security.RolesAllowed;
 

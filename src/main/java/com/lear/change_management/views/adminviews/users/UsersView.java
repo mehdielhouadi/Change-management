@@ -1,12 +1,11 @@
-package com.lear.change_management.views.users;
+package com.lear.change_management.views.adminviews.users;
 
 
-import com.lear.change_management.entities.Role;
 import com.lear.change_management.entities.User;
 import com.lear.change_management.services.PasswordResetService;
 import com.lear.change_management.services.RoleService;
 import com.lear.change_management.services.UserService;
-import com.lear.change_management.views.ui.NestedLayout;
+import com.lear.change_management.views.adminviews.ui.NestedLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -47,6 +46,7 @@ public class UsersView extends VerticalLayout {
         this.passwordResetService = passwordResetService;
         this.passwordEncoder = passwordEncoder;
         setSizeFull();
+        configureGrid();
         configureGrid();
         configureForm();
         add(getToolBar(), getContent());

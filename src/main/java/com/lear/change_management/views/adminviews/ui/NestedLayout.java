@@ -1,4 +1,4 @@
-package com.lear.change_management.views.ui;
+package com.lear.change_management.views.adminviews.ui;
 
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.html.Div;
